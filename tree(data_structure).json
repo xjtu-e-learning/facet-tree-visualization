@@ -1,0 +1,444 @@
+{
+  "code": 200,
+  "msg": "成功",
+  "data": {
+    "topicId": 65396,
+    "topicName": "树",
+    "topicUrl": null,
+    "topicLayer": null,
+    "domainId": 1,
+    "children": [
+      {
+        "facetId": 239860,
+        "facetName": "定义",
+        "facetLayer": 1,
+        "parentFacetId": 0,
+        "topicId": 65396,
+        "children": [
+          {
+            "assembleId": 1253278,
+            "assembleContent": "\n                        <p>在计算机科学中，树（英语：tree）是一种<a href=\"https://zh.wikipedia.org/wiki/%E6%8A%BD%E8%B1%A1%E8%B3%87%E6%96%99%E5%9E%8B%E5%88%A5\">抽象数据类型</a>（ADT）或是实作这种抽象数据类型的<a href=\"https://zh.wikipedia.org/wiki/%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B\">数据结构</a>，用来模拟具<a href=\"https://zh.wikipedia.org/wiki/%E6%A8%B9%E7%8B%80%E7%B5%90%E6%A7%8B\">有树状结构</a>性质的数据集合。它是由n（n&gt;0）个有限节点组成一个具有层次关系的<a href=\"https://zh.wikipedia.org/wiki/%E9%9B%86%E5%90%88\">集合</a>。把它叫做“树”是因为它看起来像一棵倒挂的树，也就是说它是根朝上，而叶朝下的。它具有以下的特点：</p><ul><li>每个节点有零个或多个子节点；</li><li>没有父节点的节点称为根节点；</li><li>每一个非根节点有且只有一个父节点；</li><li>除了根节点外，每个子节点可以分为多个不相交的子树；</li></ul><p><img src=\"https://upload.wikimedia.org/wikipedia/commons/7/7e/Treedatastructure.png\" alt=\"ä¸æ£µæ&nbsp;\"><br></p><p><br></p>",
+            "assembleScratchTime": "2018-09-05 16:57:40",
+            "facetId": 239860,
+            "sourceId": 0,
+            "type": "leaf",
+            "flag": "fragment",
+            "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253278"
+          },
+          {
+            "assembleId": 1253280,
+            "assembleContent": "\n                        <p><a href=\"https://kjguanli.xjtudlc.com/data/uploads/JS004/20161122204310404_684497_720p.mp4\" target=\"_blank\">https://kjguanli.xjtudlc.com/data/uploads/JS004/20161122204310404_684497_720p.mp4</a></p><p><br></p>",
+            "assembleScratchTime": "2018-09-05 17:00:29",
+            "facetId": 239860,
+            "sourceId": 0,
+            "type": "leaf",
+            "flag": "fragment",
+            "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253280"
+          }
+        ],
+        "childrenNumber": 2,
+        "type": "branch",
+        "containChildrenFacet": false
+      },
+      {
+        "facetId": 239861,
+        "facetName": "例子",
+        "facetLayer": 1,
+        "parentFacetId": 0,
+        "topicId": 65396,
+        "children": [
+          {
+            "assembleId": 1253301,
+            "assembleContent": "<p><img src=\"https://gss2.bdstatic.com/-fo3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=74f13d10a40f4bfb98dd960662261395/d439b6003af33a871fa35295c65c10385243b577.jpg\"><br></p><p><br></p>",
+            "assembleScratchTime": "2018-09-05 17:45:10",
+            "facetId": 239861,
+            "sourceId": 0,
+            "type": "leaf",
+            "flag": "fragment",
+            "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253301"
+          },
+          {
+            "assembleId": 1253302,
+            "assembleContent": "<p><img src=\"https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=13c1ab42fc039245b5b8e95de6fdcfa7/54fbb2fb43166d229f45481b462309f79052d20b.jpg\"><br></p><p><br></p>",
+            "assembleScratchTime": "2018-09-05 17:45:31",
+            "facetId": 239861,
+            "sourceId": 0,
+            "type": "leaf",
+            "flag": "fragment",
+            "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253302"
+          }
+        ],
+        "childrenNumber": 2,
+        "type": "branch",
+        "containChildrenFacet": false
+      },
+      {
+        "facetId": 239862,
+        "facetName": "应用",
+        "facetLayer": 1,
+        "parentFacetId": 0,
+        "topicId": 65396,
+        "children": [
+          {
+            "assembleId": 1253298,
+            "assembleContent": "<p>软件是通过数据和算法实现对现实世界的抽象，具有层次关系的数据在现实世界中能找到很多实例，比如：</p><ul><li>公司组织架构：董事长-CXO-总监-经理-主管-员工；</li><li>中国行政区域划分：中国-省-市（县）-街道（小区）-门牌号；</li><li>汽车产品库：车-品牌-车系-配置。</li></ul><p>因此，它们均可抽象为树，例如，公司组织架构可以用下图来描述：</p><p><img src=\"https://upload-images.jianshu.io/upload_images/3923557-a69f9b22c7a35fb9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/800\" alt=\"公司组织架构简图\"></p><p>如果对整个公司的人员进行梳理，那么就涉及到对上述架构树进行遍历。树的遍历指的是按照某种规则，不重复地访问树的所有节点的过程。由于树并非线性数据结构（比如上节所描述的线性表），因此其遍历根据访问节点的顺序，可划分为不同的方式：深度优先遍历和广度优先遍历。两者的区别在于：</p><ul><li>深度优先遍历会沿着树的深度遍历树的节点，尽可能深的搜索树的分支；</li><li>广度优先遍历从根节点开始，沿着树的宽度遍历树的节点。</li></ul><p><br></p>",
+            "assembleScratchTime": "2018-09-05 17:40:32",
+            "facetId": 239862,
+            "sourceId": 0,
+            "type": "leaf",
+            "flag": "fragment",
+            "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253298"
+          },
+          {
+            "assembleId": 1253299,
+            "assembleContent": "<p>二叉树是编译器设计领域重要的数据结构之一，比如语法分析过程中使用的语法树。表达式是编程中最常见的的语法形式，比如定义一个int变量：int x = 3+6*7-(5+9)/2+4，我们能很轻松的算出x=42，可是编译器是如何计算3+6*7-(5+9)/2+4的呢？</p><p>首先，3+6*7-(5+9)/2+4是一个中缀表达式，相应的前缀表达式和后缀表达式分别为（上节中描述了如何通过栈将中缀表达式转换为后缀表达式以及后缀表达式的计算）：</p><ul><li>前缀表达式：+3-*67+/+5924</li><li>后缀表达式：367*59+2/4+-+</li></ul><p>实际上，使用二叉树对上述表达式进行解析，就可以得到叶节点为操作数，其他节点为操作符的表达式树。前缀、中缀和后缀表达式分别对应了表达式树的前序、中序和后序遍历。在实际情况中，前缀表达式使用较少，中缀表达式符合人的理解习惯，但对计算机来讲，运算规则复杂，不能从左到右顺序进行，不利于计算机处理，而后缀表达式则更加适合。</p><p>下面演示如何通过后缀表达式来构建表达式树，这里需要用到栈和二叉树两种数据结构，从左到右依次读取后缀表达式367*59+2/4+-+，如果是数字则直接将其压入栈中；如果是操作符，则从栈中弹出两个操作数T1和T2，用该操作符（根节点）和T1（左子树）、T2（右子树）组成一个二叉树，然后将该二叉树压入栈中。</p><ul><li>将3、6、7依次压入栈中；<img src=\"https://upload-images.jianshu.io/upload_images/3923557-1bfe421e6175c856.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240\" alt=\"Step 1\"></li><li>乘号入栈，从栈中取出6和7，组成二叉树，并将该树压入栈中；<img src=\"https://upload-images.jianshu.io/upload_images/3923557-b206eb4dc6f709bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240\" alt=\"Step 2\"></li><li>将5、9依次压入栈中；<img src=\"https://upload-images.jianshu.io/upload_images/3923557-7342643498e6d926.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240\" alt=\"Step 3\"></li><li>加号入栈，从栈中取出5和9，组成二叉树，并将该树压入栈中，其次将2入栈；<img src=\"https://upload-images.jianshu.io/upload_images/3923557-f1a39ba529a2cf80.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240\" alt=\"Step 4\"></li><li>除号入栈，从栈中取出二叉树（5+9）和2，组成新二叉树，并将该树压入栈中，其次将4入栈；<img src=\"https://upload-images.jianshu.io/upload_images/3923557-166defb9f21e9ce9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240\" alt=\"Step 5\"></li><li>加号入栈，从栈中取出二叉树（（5+9）/2）和4，组成新二叉树，并将该树压入栈中；<img src=\"https://upload-images.jianshu.io/upload_images/3923557-d0bf9ddd6c2f7971.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240\" alt=\"Step 6\"></li><li>减号入栈，从栈中取出二叉树（6*7）和（（5+9）/2+4），组成新二叉树，并将该树压入栈中；</li></ul><p><img src=\"https://upload-images.jianshu.io/upload_images/3923557-4ceef16a66384d7c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240\" alt=\"Step 7\"></p><ul><li>加号入栈，从栈中取出3和二叉树（6*7-（5+9）/2+4），组成新二叉树，并将该树压入栈中；<img src=\"https://upload-images.jianshu.io/upload_images/3923557-b0c3503f6b4eb881.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240\" alt=\"Step 8\"></li></ul><p>表达式树是将我们原来可以直接由代码编写的逻辑以表达式的方式存储在树状的结构里，从而可以在运行时去解析这个树，然后执行，实现动态的编辑和执行代码。</p><p><br></p>",
+            "assembleScratchTime": "2018-09-05 17:41:28",
+            "facetId": 239862,
+            "sourceId": 0,
+            "type": "leaf",
+            "flag": "fragment",
+            "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253299"
+          }
+        ],
+        "childrenNumber": 2,
+        "type": "branch",
+        "containChildrenFacet": false
+      },
+      {
+        "facetId": 239863,
+        "facetName": "术语",
+        "facetLayer": 1,
+        "parentFacetId": 0,
+        "topicId": 65396,
+        "children": [
+          {
+            "facetId": 239869,
+            "facetName": "深度",
+            "facetLayer": 2,
+            "parentFacetId": 239863,
+            "topicId": 65396,
+            "children": [
+              {
+                "assembleId": 1253288,
+                "assembleContent": "\n                        <h5><strong>递归求结点的深度：</strong><strong>左子右兄弟表示法</strong><p>（如果当前结点存在右侧兄弟结点，则不改变深度p直接进行递归调用，如果存在最左侧子结点，则先将深度加1再进行递归调用）</p><pre><code><ol><li><div><div></div></div><div><div>setDepth(u,p)</div></div></li><li><div><div></div></div><div><div>{</div></div></li><li><div><div></div></div><div><div>\tD[u]=p;</div></div></li><li><div><div></div></div><div><div>\tif(T[u].r!=NIL)</div></div></li><li><div><div></div></div><div><div>\tsetDepth(T[u].r,p);</div></div></li><li><div><div></div></div><div><div>\tif(T[u].left!=NIL)</div></div></li><li><div><div></div></div><div><div>\tsetDepth(T[u].l,p+1);\t</div></div></li><li><div><div></div></div><div><div>}</div></div></li></ol></code></pre><br><strong>已知深度求结点：</strong><p>深度为k的二叉树，最多有2^k-1个结点。</p><strong>已知结点求深度：</strong><p>具有n个结点的完全二叉树的深度为[log2n]+1.（log2n是以2为底n的对数）</p></h5><p><br></p>",
+                "assembleScratchTime": "2018-09-05 17:18:18",
+                "facetId": 239869,
+                "sourceId": 0,
+                "type": "leaf",
+                "flag": "fragment",
+                "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253288"
+              },
+              {
+                "assembleId": 1253289,
+                "assembleContent": "\n                        <h2>二叉树的最大深度</h2><h5><p>给定一个二叉树，找出其最大深度。&nbsp;二叉树的深度为根节点到最远叶子节点的距离。</p><p>如果二叉树为空，则深度为0&nbsp;如果不为空，分别求左子树的深度和右子树的深度，取最大的再加1。</p><pre><code>int maxDepth(TreeNode *root) {\n        if(root == nullptr)\n            return 0;\n\n        //分别计算左子树和右子树的深度\n        int leftDepth = maxDepth(root-&gt;left) + 1;\n        int rightDepth = maxDepth(root-&gt;right) + 1;\n\n        return leftDepth &gt; rightDepth ? leftDepth: rightDepth;\n    }</code></pre></h5><h2>二叉树的最小深度</h2><h5><p>给定一个二叉树，找出其最小深度。&nbsp;二叉树的最小深度为根节点到最近叶子节点的距离。</p><p>两种实现方法：</p><p>一种就是计算左子树和右子树深度的时候，判断是否等于0，如果等于0，说明该子树不存在，深度赋值为最大值。</p><pre><code>int minDepth(TreeNode *root) {\n        if(root == NULL)\n            return false;\n        if(root-&gt;left == NULL &amp;&amp; root-&gt;right == NULL)\n            return 1;\n\n        int leftDepth = minDepth(root-&gt;left);\n        if(leftDepth == 0)\n            leftDepth = INT_MAX;\n\n        int rightDepth = minDepth(root-&gt;right);\n        if(rightDepth == 0)\n            rightDepth = INT_MAX;\n\n        return leftDepth &lt; rightDepth ? (leftDepth + 1) : (rightDepth + 1);\n    }</code></pre><p>第二种就是判断左子树或右子树是否为空，若左子树为空，则返回右子树的深度，反之返回左子树的深度，如果都不为空，则返回左子树和右子树深度的最小值。</p><pre><code>int minDepth(TreeNode *root) {\n        if(root == nullptr)\n            return 0;\n\n        //判断左子树或右子树是否为空\n        //若左子树为空，则返回右子树的深度，反之返回左子树的深度\n        if(root-&gt;left == nullptr)\n            return minDepth(root-&gt;right) + 1;\n        if(root-&gt;right == nullptr)\n            return  minDepth(root-&gt;left) + 1;\n\n        //如果都不为空，则返回左子树和右子树深度的最小值\n        int leftDepth = minDepth(root-&gt;left) + 1;\n        int rightDepth = minDepth(root-&gt;right) + 1;\n\n        return leftDepth &lt; rightDepth ? leftDepth: rightDepth;\n    }</code></pre></h5><p><br></p>",
+                "assembleScratchTime": "2018-09-05 17:19:45",
+                "facetId": 239869,
+                "sourceId": 0,
+                "type": "leaf",
+                "flag": "fragment",
+                "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253289"
+              }
+            ],
+            "childrenNumber": 2,
+            "type": "branch",
+            "containChildrenFacet": false
+          },
+          {
+            "facetId": 239870,
+            "facetName": "叶子节点",
+            "facetLayer": 2,
+            "parentFacetId": 239863,
+            "topicId": 65396,
+            "children": [
+              {
+                "assembleId": 1253290,
+                "assembleContent": "\n                        <h5><p>叶子结点 就是度为0的结点 就是没有子结点的结点</p><a href=\"https://baike.baidu.com/pic/%E5%8F%B6%E5%AD%90%E7%BB%93%E7%82%B9/3620239/0/30ecd5ef3f855d70adafd577?fr=lemma&ct=single\" target=\"_blank\"><img src=\"https://gss1.bdstatic.com/9vo3dSag_xI4khGkpoWK1HF6hhy/baike/s%3D220/sign=be8f87c9a0ec08fa220014a569ef3d4d/3bf33a87e950352a8fd0067e5343fbf2b2118b16.jpg\" alt=\"叶子结点\"></a>叶子结点<p>n<span style=\"font-size: 12px; vertical-align: sub; color: inherit;\">0</span><span style=\"color: inherit;\">：度为0的结点数，n</span><span style=\"font-size: 12px; vertical-align: sub; color: inherit;\">1</span><span style=\"color: inherit;\">:度为1的结点 n</span><span style=\"font-size: 12px; vertical-align: sub; color: inherit;\">2</span><span style=\"color: inherit;\">：度为2的结点数。 N是总结点</span></p><p>在二叉树中：<span style=\"color: inherit;\">n</span><span style=\"font-size: 12px; vertical-align: sub; color: inherit;\">0</span><span style=\"color: inherit;\">=n</span><span style=\"font-size: 12px; vertical-align: sub; color: inherit;\">2</span><span style=\"color: inherit;\">+1；</span><span style=\"color: inherit;\">N=n</span><span style=\"font-size: 12px; vertical-align: sub; color: inherit;\">0</span><span style=\"color: inherit;\">+n</span><span style=\"font-size: 12px; vertical-align: sub; color: inherit;\">1</span><span style=\"color: inherit;\">+n</span><span style=\"font-size: 12px; vertical-align: sub; color: inherit;\">2</span></p></h5>",
+                "assembleScratchTime": "2018-09-05 17:21:40",
+                "facetId": 239870,
+                "sourceId": 0,
+                "type": "leaf",
+                "flag": "fragment",
+                "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253290"
+              },
+              {
+                "assembleId": 1253291,
+                "assembleContent": "\n                        <h5><p>一棵树度为4，其中度为1，2，3，4的结点个数分别为4，2，1，1，则这棵树的<a target=\"_blank\" href=\"https://baike.baidu.com/item/%E5%8F%B6%E5%AD%90%E8%8A%82%E7%82%B9\" style=\"background-color: rgb(255, 255, 255);\">叶子节点</a><span style=\"color: inherit;\">个数为多少？</span></p><p>解：因为任一棵树中，结点总数=度数+1，所以：</p><p>n0+4+2+1+1 = （n0*0 + 1*4 + 2*2 + 3*1 + 4*1）+1</p><p>则：n0=8</p><p>其中：n0表示叶子结点。</p></h5><p><br></p>",
+                "assembleScratchTime": "2018-09-05 17:22:05",
+                "facetId": 239870,
+                "sourceId": 0,
+                "type": "leaf",
+                "flag": "fragment",
+                "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253291"
+              }
+            ],
+            "childrenNumber": 2,
+            "type": "branch",
+            "containChildrenFacet": false
+          },
+          {
+            "facetId": 239871,
+            "facetName": "根节点",
+            "facetLayer": 2,
+            "parentFacetId": 239863,
+            "topicId": 65396,
+            "children": [
+              {
+                "assembleId": 1253292,
+                "assembleContent": "\n                        <h5><p>根结点的深度为1。</p><p>在通信领域，在我们学习什么是根节点、叶节点之前，我们首先要了解一下以太网树形业务（E-TREE业务）。这种以太网业务是PTN以太网业务中的一种。E-TREE为点到多点业务，如下图所示，业务的连通性在两个或多个点之间。这种类型的以太网业务主要应用在视频点播、银行系统等方面。</p><p><a href=\"https://baike.baidu.com/pic/%E6%A0%B9%E7%BB%93%E7%82%B9/9795570/0/6159252dd42a28341b48229858b5c9ea14cebfb2?fr=lemma&ct=single\" target=\"_blank\"><img src=\"https://gss3.bdstatic.com/7Po3dSag_xI4khGkpoWK1HF6hhy/baike/s%3D220/sign=25a823ab78f40ad111e4c0e1672d1151/6159252dd42a28341b48229858b5c9ea14cebfb2.jpg\" alt=\"\"></a></p><p>其中，客户的接入点称为UNI。E-TREE业务将UNI的属性分为根节点和叶节点，这就有如一颗大树，根可以同每一片叶联通，每一片叶也可以同根联通，但是叶与叶之间无法联通。如下图所示，对于E-TREE业务来说，根节点可以与其它根节点和叶节点通信。叶节点只能与根节点通信。</p><p>E-TREE可细分为EPTree 和 EVPTree 业务， 它们的区别在于EPTree 业务直接根据UNI端口来划分业务，EVPTree业务需要根据UNI端口+CEVLAN 来划分业务。</p></h5><p><br></p>",
+                "assembleScratchTime": "2018-09-05 17:22:44",
+                "facetId": 239871,
+                "sourceId": 0,
+                "type": "leaf",
+                "flag": "fragment",
+                "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253292"
+              },
+              {
+                "assembleId": 1253293,
+                "assembleContent": "\n                        <h5><p>如图：A结点就是根结点。</p><p><a href=\"https://baike.baidu.com/pic/%E6%A0%B9%E7%BB%93%E7%82%B9/9795570/0/d048addeb62bb909cdbf1a5f?fr=lemma&ct=single\" target=\"_blank\"><img src=\"https://gss2.bdstatic.com/9fo3dSag_xI4khGkpoWK1HF6hhy/baike/s%3D220/sign=ecf578695343fbf2c12ca121807fca1e/fcfaaf51f3deb48fa6fdfcbff01f3a292df5783e.jpg\" alt=\"\"></a><br></p></h5><p><br></p>",
+                "assembleScratchTime": "2018-09-05 17:23:01",
+                "facetId": 239871,
+                "sourceId": 0,
+                "type": "leaf",
+                "flag": "fragment",
+                "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253293"
+              }
+            ],
+            "childrenNumber": 2,
+            "type": "branch",
+            "containChildrenFacet": false
+          }
+        ],
+        "childrenNumber": 3,
+        "type": "branch",
+        "containChildrenFacet": true
+      },
+      {
+        "facetId": 239864,
+        "facetName": "表示",
+        "facetLayer": 1,
+        "parentFacetId": 0,
+        "topicId": 65396,
+        "children": [
+          {
+            "assembleId": 1253300,
+            "assembleContent": "<p>There are many different ways to represent trees; common representations represent the nodes as&nbsp;<a href=\"https://en.wikipedia.org/wiki/Dynamic_memory_allocation\">dynamically allocated</a>&nbsp;records with pointers to their children, their parents, or both, or as items in an&nbsp;<a href=\"https://en.wikipedia.org/wiki/Array_data_structure\">array</a>, with relationships between them determined by their positions in the array (e.g.,&nbsp;<a href=\"https://en.wikipedia.org/wiki/Binary_heap\">binary heap</a>).</p><p>Indeed, a binary tree can be implemented as a list of lists (a list where the values are lists): the head of a list (the value of the first term) is the left child (subtree), while the tail (the list of second and subsequent terms) is the right child (subtree). This can be modified to allow values as well, as in Lisp&nbsp;<a href=\"https://en.wikipedia.org/wiki/S-expression\">S-expressions</a>, where the head (value of first term) is the value of the node, the head of the tail (value of second term) is the left child, and the tail of the tail (list of third and subsequent terms) is the right child.</p><p>In general a node in a tree will not have pointers to its parents, but this information can be included (expanding the data structure to also include a pointer to the parent) or stored separately. Alternatively, upward links can be included in the child node data, as in a&nbsp;<a href=\"https://en.wikipedia.org/wiki/Threaded_binary_tree\">threaded binary tree</a>.</p><p><br></p>",
+            "assembleScratchTime": "2018-09-05 17:42:46",
+            "facetId": 239864,
+            "sourceId": 0,
+            "type": "leaf",
+            "flag": "fragment",
+            "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253300"
+          }
+        ],
+        "childrenNumber": 1,
+        "type": "branch",
+        "containChildrenFacet": false
+      },
+      {
+        "facetId": 239865,
+        "facetName": "特点",
+        "facetLayer": 1,
+        "parentFacetId": 0,
+        "topicId": 65396,
+        "children": [
+          {
+            "assembleId": 1253303,
+            "assembleContent": "<p><strong>树形结构-- 一对多的关系<br></strong>数据结构中,使用树形结构表示数据表素之间一对多的关系,树形结构是一种非线型结构.<br>定义:<br>树(Tree)是n(n≥0)个相同数据类型的数据元素的集合.树中的数据元素称为节点(Node).。n=0的树称为空树(Empty Tree)；对于n＞0的任意非空树T有：<br>（1）有且仅有一个特殊的结点称为树的根(Root)结点，根没有前驱结点；<br>（2）若n＞1，则除根结点外，其余结点被分成了m(m＞0)个互不相交的集合T1，T2，…，Tm，其中每一个集合Ti(1≤i≤m)本身又是一棵树。树T1，T2，…，Tm称为这棵树的子树(Subtree)。<br>由树的定义可知，树的定义是递归的，用树来定义树。因此，树（以及二叉树）的许多算法都使用了递归。<br>树的形式定义为：树(Tree)简记为T，是一个二元组，<br><strong>T = (D, R)</strong><br>其中：D是结点的有限集合；<br>R是结点之间关系的有限集合。<br></p><p><br></p>",
+            "assembleScratchTime": "2018-09-05 17:46:32",
+            "facetId": 239865,
+            "sourceId": 0,
+            "type": "leaf",
+            "flag": "fragment",
+            "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253303"
+          },
+          {
+            "assembleId": 1253304,
+            "assembleContent": "<p><strong>树具有下面两个特点：<br></strong>（1）树的根结点没有前驱结点，除根结点之外的所有结点有且只有一个前驱结点。<br>（2）树中的所有结点都可以有零个或多个后继结点。<br>实际上，第（1）个特点表示的就是树形结构的“一对多关系”中的“一”，第（2）特点表示的是“多”。<br><br><br><img src=\"https://images.cnblogs.com/cnblogs_com/wservices/tree.jpg\" alt=\"\"><br></p><p><br></p>",
+            "assembleScratchTime": "2018-09-05 17:46:49",
+            "facetId": 239865,
+            "sourceId": 0,
+            "type": "leaf",
+            "flag": "fragment",
+            "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253304"
+          }
+        ],
+        "childrenNumber": 2,
+        "type": "branch",
+        "containChildrenFacet": false
+      },
+      {
+        "facetId": 239866,
+        "facetName": "操作",
+        "facetLayer": 1,
+        "parentFacetId": 0,
+        "topicId": 65396,
+        "children": [
+          {
+            "facetId": 239872,
+            "facetName": "插入",
+            "facetLayer": 2,
+            "parentFacetId": 239866,
+            "topicId": 65396,
+            "children": [
+              {
+                "assembleId": 1253281,
+                "assembleContent": "\n                        <h1>二叉搜索树的插入</h1><h2>1 搜索</h2><p>　　插入之前我们先来说说它的搜索，像上图这样的一棵二叉搜索树，我们要查找某一个元素是很简单的。因为它的节点分布是有规律的，所以查找一棵元素只需要如下的步骤就可以了：</p><h2>2 插入</h2><p>　　由于二叉搜索树的特殊性质确定了二叉搜索树中每个元素只可能出现一次，所以在插入的过程中如果发现这个元素已经存在于二叉搜索树中，就不进行插入。否则就查找合适的位置进行插入。</p><h2>2.1 第一种情况：root为空</h2><p>　　直接插入，return true；&nbsp;<img src=\"http://images2015.cnblogs.com/blog/932246/201608/932246-20160818091211562-1749128066.png\" alt=\"这里写图片描述\"></p><h2>2.2 第一种情况：要插入的元素已经存在</h2><p>　　如上面所说，如果在二叉搜索树中已经存在该元素，则不再进行插入，直接return false；</p><h2>2.3 第三种情况：能够找到合适位置</h2><p><img src=\"http://images2015.cnblogs.com/blog/932246/201608/932246-20160818091253406-1694491277.png\" alt=\"这里写图片描述\"></p><p><br></p>",
+                "assembleScratchTime": "2018-09-05 17:09:31",
+                "facetId": 239872,
+                "sourceId": 0,
+                "type": "leaf",
+                "flag": "fragment",
+                "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253281"
+              },
+              {
+                "assembleId": 1253283,
+                "assembleContent": "\n                        <h5>向树中插入另一棵树[<a href=\"https://zh.wikipedia.org/w/index.php?title=%E6%A0%91_(%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)&action=edit&amp;section=18\">编辑</a>]</h5><h5><pre>Status InsertChild(PTree *T,TElemType p,int i,PTree c)\n{ /* 初始条件：树T存在，p是T中某个节点，1≤i≤p所指节点的度+1，非空树c与T不相交 */\n  /* 操作结果：插入c为T中p节点的第i棵子树 */\n  int j,k,l,f=1,n=0; /* 设交换标志f的初值为1，p的孩子数n的初值为0 */\n  PTNode t;\n  if(!TreeEmpty(T)) /* T不空 */\n  {\n    for(j=0;j&lt;T-&gt;n;j++) /* 在T中找p的序号 */\n      if(T-&gt;nodes[j].data==p) /* p的序号为j */\n        break;\n    l=j+1; /* 如果c是p的第1棵子树，则插在j+1处 */\n    if(i&gt;1) /* c不是p的第1棵子树 */\n    {\n      for(k=j+1;k&lt;T-&gt;n;k++) /* 从j+1开始找p的前i-1个孩子 */\n        if(T-&gt;nodes[k].parent==j) /* 当前节点是p的孩子 */\n        {\n          n++; /* 孩子数加1 */\n          if(n==i-1) /* 找到p的第i-1个孩子，其序号为k1 */\n            break;\n        }\n      l=k+1; /* c插在k+1处 */\n    } /* p的序号为j，c插在l处 */\n    if(l&lt;T-&gt;n) /* 插入点l不在最后 */\n      for(k=T-&gt;n-1;k&gt;=l;k--) /* 依次将序号l以后的节点向后移c.n个位置 */\n      {\n        T-&gt;nodes[k+c.n]=T-&gt;nodes[k];\n        if(T-&gt;nodes[k].parent&gt;=l)\n          T-&gt;nodes[k+c.n].parent+=c.n;\n      }\n    for(k=0;k&lt;c.n;k++)\n    {\n      T-&gt;nodes[l+k].data=c.nodes[k].data; /* 依次将树c的所有节点插于此处 */\n      T-&gt;nodes[l+k].parent=c.nodes[k].parent+l;\n    }\n    T-&gt;nodes[l].parent=j; /* 树c的根节点的父节点为p */\n    T-&gt;n+=c.n; /* 树T的节点数加c.n个 */\n    while(f)\n    { /* 从插入点之后，将节点仍按层序排列 */\n      f=0; /* 交换标志置0 */\n      for(j=l;j&lt;T-&gt;n-1;j++)\n        if(T-&gt;nodes[j].parent&gt;T-&gt;nodes[j+1].parent)\n        {/* 如果节点j的父节点排在节点j+1的父节点之后（树没有按层序排列），交换两节点*/\n          t=T-&gt;nodes[j];\n          T-&gt;nodes[j]=T-&gt;nodes[j+1];\n          T-&gt;nodes[j+1]=t;\n          f=1; /* 交换标志置1 */\n          for(k=j;k&lt;T-&gt;n;k++) /* 改变父节点序号 */\n            if(T-&gt;nodes[k].parent==j)\n              T-&gt;nodes[k].parent++; /* 父节点序号改为j+1 */\n            else if(T-&gt;nodes[k].parent==j+1)\n              T-&gt;nodes[k].parent--; /* 父节点序号改为j */\n        }\n    }\n    return OK;\n  }\n  else /* 树T不存在 */\n    return ERROR;\n}</pre></h5><p><br></p>",
+                "assembleScratchTime": "2018-09-05 17:13:39",
+                "facetId": 239872,
+                "sourceId": 0,
+                "type": "leaf",
+                "flag": "fragment",
+                "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253283"
+              }
+            ],
+            "childrenNumber": 2,
+            "type": "branch",
+            "containChildrenFacet": false
+          },
+          {
+            "facetId": 239873,
+            "facetName": "遍历",
+            "facetLayer": 2,
+            "parentFacetId": 239866,
+            "topicId": 65396,
+            "children": [
+              {
+                "assembleId": 1253285,
+                "assembleContent": "\n                        <h5>层序遍历树[<a href=\"https://zh.wikipedia.org/w/index.php?title=%E6%A0%91_(%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)&action=edit&amp;section=20\">编辑</a>]</h5><h5><pre>void TraverseTree(PTree *T,void(*Visit)(TElemType))\n{ /* 初始条件：二叉树T存在,Visit是对节点操作的应用函数 */\n  /* 操作结果：层序遍历树T,对每个节点调用函数Visit一次且仅一次 */\n  int i;\n  for(i=0;i&lt;T-&gt;n;i++)\n    Visit(T-&gt;nodes[i].data);\n  printf(\"\\n\");\n}</pre></h5><p><br></p>",
+                "assembleScratchTime": "2018-09-05 17:15:01",
+                "facetId": 239873,
+                "sourceId": 0,
+                "type": "leaf",
+                "flag": "fragment",
+                "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253285"
+              },
+              {
+                "assembleId": 1253286,
+                "assembleContent": "\n                        <h5><strong>前序遍历</strong><pre><code><ol><li><div><div></div></div><div><div>void preParse(int u)</div></div></li><li><div><div></div></div><div><div>{//前序遍历 </div></div></li><li><div><div></div></div><div><div>\tif(u==NIL)return;</div></div></li><li><div><div></div></div><div><div>\tprintf(\" %d\",u);</div></div></li><li><div><div></div></div><div><div>\tpreParse(T[u].l);</div></div></li><li><div><div></div></div><div><div>\tpreParse(T[u].r);</div></div></li><li><div><div></div></div><div><div>}</div></div></li></ol></code></pre><br><strong>中序遍历</strong><pre><code><ol><li><div><div></div></div><div><div>void inParse(int u)</div></div></li><li><div><div></div></div><div><div>{//中序遍历  </div></div></li><li><div><div></div></div><div><div>\tif(u==NIL)return;</div></div></li><li><div><div></div></div><div><div>\tinParse(T[u].l);</div></div></li><li><div><div></div></div><div><div>\tprintf(\" %d\",u);</div></div></li><li><div><div></div></div><div><div>\tinParse(T[u].r);</div></div></li><li><div><div></div></div><div><div>}</div></div></li></ol></code></pre><br><strong>后序遍历</strong><pre><code><ol><li><div><div></div></div><div><div>void postParse(int u)</div></div></li><li><div><div></div></div><div><div>{//后序遍历  </div></div></li><li><div><div></div></div><div><div>\tif(u==NIL)return;</div></div></li><li><div><div></div></div><div><div>\tpostParse(T[u].l);</div></div></li><li><div><div></div></div><div><div>\tpostParse(T[u].r);</div></div></li><li><div><div></div></div><div><div>\tprintf(\" %d\",u);</div></div></li><li><div><div></div></div><div><div>}</div></div></li></ol></code></pre></h5><p><br></p>",
+                "assembleScratchTime": "2018-09-05 17:17:05",
+                "facetId": 239873,
+                "sourceId": 0,
+                "type": "leaf",
+                "flag": "fragment",
+                "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253286"
+              }
+            ],
+            "childrenNumber": 2,
+            "type": "branch",
+            "containChildrenFacet": false
+          },
+          {
+            "facetId": 239874,
+            "facetName": "删除",
+            "facetLayer": 2,
+            "parentFacetId": 239866,
+            "topicId": 65396,
+            "children": [
+              {
+                "assembleId": 1253282,
+                "assembleContent": "\n                        <h1>二叉搜索树的删除</h1><p>　　对于二叉搜索树的删除操作，主要是要理解其中的几种情况，写起来还是比较简单的。当然一开始还是需要判断要删除的节点是否存在于我们的树中，如果要删除的元素都不在树中，就直接返回false；否则，再分为以下四种情况来进行分析：</p><ul><li>要删除的节点无左右孩子；</li><li>要删除的节点只有左孩子；</li><li>要删除的节点只有右孩子；</li><li>要删除的节点有左、右孩子。</li></ul><h2>1 第一种情况：删除没有子节点的节点</h2><p>　　对于第一种情况，我们完全可以把它归为第二或者第三种情况，就不用再单独写一部分代码进行处理；</p><h2>2 第二种情况：删除有一个子节点的节点</h2><h3>2.1 如果要删除的节点只有左孩子，那么就让该节点的父亲结点指向该节点的左孩子，然后删除该节点，返回true；</h3><p><img src=\"http://images2015.cnblogs.com/blog/932246/201608/932246-20160818091426375-1451065640.png\" alt=\"这里写图片描述\"></p><h3>2.2 如果要删除的节点只有右孩子，那么就让该节点的父亲结点指向该节点的右孩子，然后删除该节点，返回true；</h3><p><img src=\"http://images2015.cnblogs.com/blog/932246/201608/932246-20160818091459531-2407917.png\" alt=\"这里写图片描述\">&nbsp;　　对于上面这两种情况我们还应该在之前进行一个判断，就是判断这个节点是否是根节点，如果是根节点的话，就直接让根节点指向这个节点的左孩子或右孩子，然后删除这个节点。</p><h2>3 第三种情况： 删除有两个子节点的节点，即左右子节点都非空</h2><p>（1）找到该节点的右子树中的最左孩子（也就是右子树中序遍历的第一个节点，分两种情况）</p><ul><li>此节点是有右子树：&nbsp;<img src=\"https://img-blog.csdn.net/20180226234753210?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbmxpZ3Vhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70\" alt=\"这里写图片描述\"></li><li>当这个节点没有右子树的情况下，即node.rchild == null，如果这个节点的父节点的左子树与这个节点相同的话，那么就说明这个父节点就是后续节点了&nbsp;<img src=\"http://images2015.cnblogs.com/blog/932246/201608/932246-20160818091527109-231295437.png\" alt=\"这里写图片描述\"></li></ul><p>（2）把它的值和要删除的节点的值进行交换；</p><p>（3）然后删除这个节点即相当于把我们想删除的节点删除了，返回true。</p><p><br></p>",
+                "assembleScratchTime": "2018-09-05 17:11:08",
+                "facetId": 239874,
+                "sourceId": 0,
+                "type": "leaf",
+                "flag": "fragment",
+                "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253282"
+              },
+              {
+                "assembleId": 1253284,
+                "assembleContent": "\n                        <h5>删除子树[<a href=\"https://zh.wikipedia.org/w/index.php?title=%E6%A0%91_(%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)&action=edit&amp;section=19\">编辑</a>]</h5><h5><pre>Status deleted[MAX_TREE_SIZE+1]; /* 删除标志数组(全局量) */\nvoid DeleteChild(PTree *T,TElemType p,int i)\n{ /* 初始条件：树T存在，p是T中某个节点，1≤i≤p所指节点的度 */\n  /* 操作结果：删除T中节点p的第i棵子树 */\n  int j,k,n=0;\n  LinkQueue q;\n  QElemType pq,qq;\n  for(j=0;j&lt;=T-&gt;n;j++)\n    deleted[j]=0; /* 置初值为0(不删除标记) */\n  pq.name='a'; /* 此成员不用 */\n  InitQueue(&amp;q); /* 初始化队列 */\n  for(j=0;j&lt;T-&gt;n;j++)\n    if(T-&gt;nodes[j].data==p)\n      break; /* j为节点p的序号 */\n  for(k=j+1;k&lt;T-&gt;n;k++)\n  {\n    if(T-&gt;nodes[k].parent==j)\n      n++;\n    if(n==i)\n      break; /* k为p的第i棵子树节点的序号 */\n  }\n  if(k&lt;T-&gt;n) /* p的第i棵子树节点存在 */\n  {\n    n=0;\n    pq.num=k;\n    deleted[k]=1; /* 置删除标记 */\n    n++;\n    EnQueue(&amp;q,pq);\n    while(!QueueEmpty(q))\n    {\n      DeQueue(&amp;q,&amp;qq);\n      for(j=qq.num+1;j&lt;T-&gt;n;j++)\n        if(T-&gt;nodes[j].parent==qq.num)\n        {\n          pq.num=j;\n          deleted[j]=1; /* 置删除标记 */\n          n++;\n          EnQueue(&amp;q,pq);\n        }\n    }\n    for(j=0;j&lt;T-&gt;n;j++)\n      if(deleted[j]==1)\n      {\n        for(k=j+1;k&lt;=T-&gt;n;k++)\n        {\n          deleted[k-1]=deleted[k];\n          T-&gt;nodes[k-1]=T-&gt;nodes[k];\n          if(T-&gt;nodes[k].parent&gt;j)\n            T-&gt;nodes[k-1].parent--;\n        }\n        j--;\n      }\n    T-&gt;n-=n; /* n为待删除节点数 */\n  }\n}</pre></h5><p><br></p>",
+                "assembleScratchTime": "2018-09-05 17:13:59",
+                "facetId": 239874,
+                "sourceId": 0,
+                "type": "leaf",
+                "flag": "fragment",
+                "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253284"
+              }
+            ],
+            "childrenNumber": 2,
+            "type": "branch",
+            "containChildrenFacet": false
+          }
+        ],
+        "childrenNumber": 3,
+        "type": "branch",
+        "containChildrenFacet": true
+      },
+      {
+        "facetId": 239867,
+        "facetName": "实现",
+        "facetLayer": 1,
+        "parentFacetId": 0,
+        "topicId": 65396,
+        "children": [
+          {
+            "assembleId": 1253296,
+            "assembleContent": "\n                        <h5><p>树的实现：&nbsp;使用树的兄弟孩子表示法。&nbsp;typedef struct STreeNode* pSTreeNode;</p><p>struct STreeNode&nbsp;{&nbsp;int nValue;&nbsp;pSTreeNode pFirstChild;&nbsp;pSTreeNode pNextBrother;</p><pre><code>STreeNode()\n{\n    nValue = 0;\n    pFirstChild = NULL;\n    pNextBrother = NULL;\n}\n</code><ul><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ul></pre><p>};</p><p>其中pFirstChild(左孩子节点)表示第一个儿子节点，pNextBrother(右孩子节点)表示下一个兄弟节点。</p><p>一颗普通树表示如下：&nbsp;<img src=\"https://img-blog.csdn.net/20170726173044835?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGluaW5nMDQyMA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast\" alt=\"这里写图片描述\"></p><p>使用兄弟孩子表示法表示如下：&nbsp;<img src=\"https://img-blog.csdn.net/20170726173105928?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGluaW5nMDQyMA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast\" alt=\"这里写图片描述\"></p></h5><p><br></p>",
+            "assembleScratchTime": "2018-09-05 17:36:21",
+            "facetId": 239867,
+            "sourceId": 0,
+            "type": "leaf",
+            "flag": "fragment",
+            "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253296"
+          },
+          {
+            "assembleId": 1253297,
+            "assembleContent": "<p>1.创建树</p><pre><code><ol><li><div><div></div></div><div><div>// 创建树  </div></div></li><li><div><div></div></div><div><div>GTree* GTree_Create()</div></div></li><li><div><div></div></div><div><div>{</div></div></li><li><div><div></div></div><div><div>    return LinkList_Create();    // 调用链表创建函数，定义一个空组织链表，并返回</div></div></li><li><div><div></div></div><div><div>}</div></div></li></ol></code></pre><p>这里没啥好说的，不明白的小伙伴可以参考之前的章节。</p><p>2.销毁树和清空树</p><pre><code><ol><li><div><div></div></div><div><div>// 销毁树</div></div></li><li><div><div></div></div><div><div>void GTree_Destroy(GTree* tree)</div></div></li><li><div><div></div></div><div><div>{</div></div></li><li><div><div></div></div><div><div>    GTree_Clear(tree);</div></div></li><li><div><div></div></div><div><div>    LinkList_Destroy(tree);</div></div></li><li><div><div></div></div><div><div>}</div></div></li><li><div><div></div></div><div><div>// 清空树</div></div></li><li><div><div></div></div><div><div>void GTree_Clear(GTree* tree)</div></div></li><li><div><div></div></div><div><div>{</div></div></li><li><div><div></div></div><div><div>     GTree_Delete(tree, 0);</div></div></li><li><div><div></div></div><div><div>}</div></div></li></ol></code></pre><p>销毁树就是将所有的树结构清空，并且释放所有申请内存，代表着这个东西不存在了，清空树就是将树变成空树，也就是将其从</p><p>根结点删除。</p><p><br></p>",
+            "assembleScratchTime": "2018-09-05 17:38:02",
+            "facetId": 239867,
+            "sourceId": 0,
+            "type": "leaf",
+            "flag": "fragment",
+            "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253297"
+          }
+        ],
+        "childrenNumber": 2,
+        "type": "branch",
+        "containChildrenFacet": false
+      },
+      {
+        "facetId": 239868,
+        "facetName": "种类",
+        "facetLayer": 1,
+        "parentFacetId": 0,
+        "topicId": 65396,
+        "children": [
+          {
+            "assembleId": 1253294,
+            "assembleContent": "\n                        <h2>二叉搜索树(BST)</h2><h3>基础知识</h3><h5><ul><li>树通常用来存储已排序或已有序的数据。在树中存储数据，常见的就是二叉搜索树(Binary Search Tree，BST）</li><li>BST中的数据是按值排序的：一个节点所有的左侧子孙节点都小于或等于该节点，所有的右侧子孙节点都大于或等于该节点。</li><li>当面试官说树的时候，通常二叉树，再确认是否为二叉搜索树</li><li>如果使用中序遍历二叉搜索树，遍历的顺序会按照节点关键字的大小关系从小到大依次进行。</li></ul></h5><p><br></p>",
+            "assembleScratchTime": "2018-09-05 17:34:35",
+            "facetId": 239868,
+            "sourceId": 0,
+            "type": "leaf",
+            "flag": "fragment",
+            "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253294"
+          },
+          {
+            "assembleId": 1253295,
+            "assembleContent": "\n                        <h3>红黑树概述</h3><h5><p>前面我们已经说过，红黑树，本质上来说就是一棵二叉查找树，但它在二叉查找树的基础上增加了着色和相关的性质使得红黑树相对平衡，从而保证了红黑树的查找、插入、删除的时间复杂度最坏为O(log n)。</p><p>但它是如何保证一棵n个结点的红黑树的高度始终保持在h = logn的呢？这就引出了红黑树的5条性质：</p><ol><li>每个结点要么是红的，要么是黑的。</li><li>根结点是黑的。</li><li>每个叶结点（叶结点即指树尾端NIL指针或NULL结点）是黑的。</li><li>如果一个结点是红的，那么它的俩个儿子都是黑的。</li><li>对于任一结点而言，其到叶结点树尾端NIL指针的每一条路径都包含相同数目的黑结点。</li></ol><p>正是红黑树的这5条性质，使得一棵n个结点是红黑树始终保持了logn的高度，从而也就解释了上面我们所说的“红黑树的查找、插入、删除的时间复杂度最坏为O(log n)”这一结论的原因。</p><p>如下图所示，即是一颗红黑树(下图引自wikipedia：&nbsp;<a href=\"http://t.cn/hgvH1l\" target=\"_blank\">http://t.cn/hgvH1l</a>&nbsp;)：&nbsp;<img src=\"https://img-blog.csdn.net/20160428192839498\" alt=\"这里写图片描述\">&nbsp;上文中我们所说的 “叶结点” 或”NULL结点”，它不包含数据而只充当树在此结束的指示，这些结点以及它们的父结点，在绘图中都会经常被省略。</p></h5><p><br></p>",
+            "assembleScratchTime": "2018-09-05 17:35:15",
+            "facetId": 239868,
+            "sourceId": 0,
+            "type": "leaf",
+            "flag": "fragment",
+            "url": "47.95.145.72:8083/assemble/getAssembleContentById?assembleId=1253295"
+          }
+        ],
+        "childrenNumber": 2,
+        "type": "branch",
+        "containChildrenFacet": false
+      }
+    ],
+    "childrenNumber": 9
+  }
+}
