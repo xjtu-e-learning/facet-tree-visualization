@@ -1,135 +1,168 @@
-// 画布长宽
-var canvasWidth = 500;
-var canvasHeight = 800;
-// 一级分面宽度
-var firstLayerWidth = 14;
-// 一级分面间隔
-var firstLayerInterval = 4;
-// 一级分面弯曲的初始角度
-var initialAngle = 125;
-// 一级分面之间角度差
-var deltaAngle = 15;
-$(document).ready(function(){
-    // data = {};
-    // $.ajax({
-    //     type: "GET",
-    //     url: "./tree(data_structure).json",
-    //     data: {},
-    //     dataType: "json",
-    //     success: function(response){
-    //         // console.log(response.data);
-    //         data = response.data;
-    //     },
-    //     error: function(e){
-    //         console.log(e);
-    //     }
-    // });
-    
-    var dataset = [300,350,400,450,400,350,300,260];
-    var dataset1 = dataset.map(data => data/2);
-    // 一级分面数量
-    var FirstLayerNum = dataset.length;
+var app = angular.module('myApp',['rzModule']);
 
+app.controller('myCtrl', function($scope){
+
+    $scope.slider = {
+        value: 10
+    };
+    // 画布长宽
+    $scope.canvasWidth = 500;
+    $scope.canvasHeight = 800;
+    // 一级分面宽度
+    $scope.firstLayerWidth = 14;
+    $scope.firstLayerWidthOptions = {
+      floor: 0,
+      ceil: $scope.firstLayerWidth*2,
+      step: 1,
+    };
+    // 一级分面间隔
+    $scope.firstLayerInterval = 4;
+    $scope.firstLayerIntervalOptions = {
+        floor: 0,
+        ceil: $scope.firstLayerInterval*4,
+        step: 1,
+      };
+    // 一级分面弯曲的初始角度
+    $scope.initialAngle = 125;
+    $scope.initialAngleOptions = {
+        floor: 0,
+        ceil: $scope.initialAngle,
+        step: 1,
+      };
+    // 一级分面之间角度差
+    $scope.deltaAngle = 15;
+    $scope.deltaAngleOptions = {
+        floor: 0,
+        ceil: $scope.deltaAngle*2,
+        step: 1,
+      };
     // 1:Dust Red 2:Volcano 3:Sunset Orange 4:Calendula Cold 5:Sunrise Yellow 6:Lime 7:Polar Green 8:Cyan 9:Daybreak Blue 10:Geek Blue 11:Golden Purple 12:Magenta
-    var color = ['#D32731','#DA5526','#E18B29','#E7AC2F','#F1DA38','#B1D837','#7FC236','#6EC1C1','#548FFB','#3E55E7','#6431CC','#CB3392']
-    var g = d3.select("body").select("svg").append("g")
-        // .attr("transform","translate(60,60)")
-        .selectAll("rect")
-        .data(dataset)
-        .enter()
-        .append("rect")
-        .attr("y",function(d){
-            return canvasHeight-50-d;
-        })
-        .attr("x",function(d,i){
-            // return i*30;
-            if(FirstLayerNum%2){
-                return canvasWidth/2 - firstLayerWidth/2 - (firstLayerInterval + firstLayerWidth)*(FirstLayerNum-1)/2 + (firstLayerInterval+firstLayerWidth) * i;
-            }
-            else{
-                return canvasWidth/2 + firstLayerInterval/2 - (firstLayerWidth + firstLayerInterval)*FirstLayerNum/2 + (firstLayerInterval+firstLayerWidth) * i;
-            }
-        })
-        .attr("height",function(d){
-            return d;
-        })
-        .attr("width",firstLayerWidth)
-        .attr("fill",function(d,i){
-            return color[i];
-        })
-        // .attr("transform",function(d,i){
-        //     return "translate("+i*30+",150)";
-        // })
-        //旋转
-        // .attr("transform",function(d,i){
-        //     return "rotate(-45 "+i*30+",150)"
-        // })
-    var g1 = d3.select("body").select("svg").append("g")
-        .selectAll("rect")
-        .data(dataset)
-        .enter()
-        .append("rect")
-        .attr("y",function(d){
-            return canvasHeight-50-d;
-        })
-        .attr("x",function(d,i){
-            // return i*30;
-            if(FirstLayerNum%2){
-                x = canvasWidth/2 - firstLayerWidth/2 - (firstLayerInterval + firstLayerWidth)*(FirstLayerNum-1)/2 + (firstLayerInterval+firstLayerWidth) * i;
-                if(x === canvasWidth/2 - firstLayerWidth/2){
-                    return x;
-                }
-                else if(x < canvasWidth/2){
-                    return x + firstLayerWidth;
+    $scope.color = ['#D32731','#DA5526','#E18B29','#E7AC2F','#F1DA38','#B1D837','#7FC236','#6EC1C1','#548FFB','#3E55E7','#6431CC','#CB3392']
+        
+    $scope.dataset = [300,350,400,450,400,350,300,260];
+    // 一级分面数量
+    $scope.FirstLayerNum = $scope.dataset.length;
+    
+    $scope.drawTree = function(){
+        // data = {};
+        // $.ajax({
+        //     type: "GET",
+        //     url: "./tree(data_structure).json",
+        //     data: {},
+        //     dataType: "json",
+        //     success: function(response){
+        //         // console.log(response.data);
+        //         data = response.data;
+        //     },
+        //     error: function(e){
+        //         console.log(e);
+        //     }
+        // });
+        $scope.dataset = [];
+        $scope.data !== undefined && $scope.data.split(',').forEach(element => {
+            $scope.dataset.push(parseInt(element));
+        });
+        d3.selectAll("svg").remove();
+
+        var g = d3.select("div#mysvg").append("svg").attr("width","600px").attr("height","800px").append("g")
+            .selectAll("rect")
+            .data($scope.dataset)
+            .enter()
+            .append("rect")
+            .attr("y",function(d){
+                return $scope.canvasHeight-50-d;
+            })
+            .attr("x",function(d,i){
+                // return i*30;
+                if($scope.FirstLayerNum%2){
+                    return $scope.canvasWidth/2 - $scope.firstLayerWidth/2 - ($scope.firstLayerInterval + $scope.firstLayerWidth)*($scope.FirstLayerNum-1)/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
                 }
                 else{
-                    return x - firstLayerWidth;
-                } 
-            }
-            else{
-                x = canvasWidth/2 + firstLayerInterval/2 - (firstLayerWidth + firstLayerInterval)*FirstLayerNum/2 + (firstLayerInterval+firstLayerWidth) * i;
-                if(x < canvasWidth/2){
-                    return x + firstLayerWidth;
+                    return $scope.canvasWidth/2 + $scope.firstLayerInterval/2 - ($scope.firstLayerWidth + $scope.firstLayerInterval)*$scope.FirstLayerNum/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
+                }
+            })
+            .attr("height",function(d){
+                return d;
+            })
+            .attr("width",$scope.firstLayerWidth)
+            .attr("fill",function(d,i){
+                return $scope.color[i];
+            });
+            // .attr("transform",function(d,i){
+            //     return "translate("+i*30+",150)";
+            // })
+            //旋转
+            // .attr("transform",function(d,i){
+            //     return "rotate(-45 "+i*30+",150)"
+            // })
+        var g1 = d3.select("body").select("svg").append("g")
+            .selectAll("rect")
+            .data($scope.dataset)
+            .enter()
+            .append("rect")
+            .attr("y",function(d){
+                return $scope.canvasHeight-50-d;
+            })
+            .attr("x",function(d,i){
+                // return i*30;
+                if($scope.FirstLayerNum%2){
+                    x = $scope.canvasWidth/2 - $scope.firstLayerWidth/2 - ($scope.firstLayerInterval + $scope.firstLayerWidth)*($scope.FirstLayerNum-1)/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
+                    if(x === $scope.canvasWidth/2 - $scope.firstLayerWidth/2){
+                        return x;
+                    }
+                    else if(x < $scope.canvasWidth/2){
+                        return x + $scope.firstLayerWidth;
+                    }
+                    else{
+                        return x - $scope.firstLayerWidth;
+                    } 
                 }
                 else{
-                    return x - firstLayerWidth;
+                    x = $scope.canvasWidth/2 + $scope.firstLayerInterval/2 - ($scope.firstLayerWidth + $scope.firstLayerInterval)*$scope.FirstLayerNum/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
+                    if(x < $scope.canvasWidth/2){
+                        return x + $scope.firstLayerWidth;
+                    }
+                    else{
+                        return x - $scope.firstLayerWidth;
+                    }
                 }
-            }
-        })
-        .attr("height",function(d,i){
-            if(FirstLayerNum%2 && i === (FirstLayerNum-1)/2){
-                return d/8;
-            }
-            return d/4;
-        })
-        .attr("width",firstLayerWidth)
-        .attr("fill",function(d,i){
-            return color[i];
-        })
-        //旋转
-        .attr("transform",function(d,i){
-            y = canvasHeight-50-d;
-            if(FirstLayerNum%2){
-                x = canvasWidth/2 - firstLayerWidth/2 - (firstLayerInterval + firstLayerWidth)*(FirstLayerNum-1)/2 + (firstLayerInterval+firstLayerWidth) * i;
-                if(x === canvasWidth/2 - firstLayerWidth/2){
-                    return "rotate(180 " + canvasWidth/2 + "," + y + ")" ;
+            })
+            .attr("height",function(d,i){
+                if($scope.FirstLayerNum%2 && i === ($scope.FirstLayerNum-1)/2){
+                    return d/8;
                 }
-                else if(x < canvasWidth/2){
-                    return "rotate(" + (initialAngle + deltaAngle*i) + " " + (x+firstLayerWidth) + "," + y + ")" ;
+                return d/4;
+            })
+            .attr("width",$scope.firstLayerWidth)
+            .attr("fill",function(d,i){
+                return $scope.color[i];
+            })
+            //旋转
+            .attr("transform",function(d,i){
+                y = $scope.canvasHeight-50-d;
+                if($scope.FirstLayerNum%2){
+                    x = $scope.canvasWidth/2 - $scope.firstLayerWidth/2 - ($scope.firstLayerInterval + $scope.firstLayerWidth)*($scope.FirstLayerNum-1)/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
+                    if(x === $scope.canvasWidth/2 - $scope.firstLayerWidth/2){
+                        return "rotate(180 " + $scope.canvasWidth/2 + "," + y + ")" ;
+                    }
+                    else if(x < $scope.canvasWidth/2){
+                        return "rotate(" + ($scope.initialAngle + $scope.deltaAngle*i) + " " + (x+$scope.firstLayerWidth) + "," + y + ")" ;
+                    }
+                    else{
+                        return "rotate(" + (-$scope.initialAngle - $scope.deltaAngle*($scope.FirstLayerNum - i - 1)) + " " + x + "," + y + ")" ;
+                    }
                 }
                 else{
-                    return "rotate(" + (-initialAngle - deltaAngle*(FirstLayerNum - i - 1)) + " " + x + "," + y + ")" ;
+                    x = $scope.canvasWidth/2 + $scope.firstLayerInterval/2 - ($scope.firstLayerWidth + $scope.firstLayerInterval)*$scope.FirstLayerNum/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
+                    if(x < $scope.canvasWidth/2){
+                        return "rotate(" + ($scope.initialAngle + $scope.deltaAngle*i) + " " + (x+$scope.firstLayerWidth) + "," + y + ")" ;
+                    }
+                    else{
+                        return "rotate(" + (-$scope.initialAngle - $scope.deltaAngle*($scope.FirstLayerNum - i - 1)) + " " + x + "," + y + ")" ;
+                    }
                 }
-            }
-            else{
-                x = canvasWidth/2 + firstLayerInterval/2 - (firstLayerWidth + firstLayerInterval)*FirstLayerNum/2 + (firstLayerInterval+firstLayerWidth) * i;
-                if(x < canvasWidth/2){
-                    return "rotate(" + (initialAngle + deltaAngle*i) + " " + (x+firstLayerWidth) + "," + y + ")" ;
-                }
-                else{
-                    return "rotate(" + (-initialAngle - deltaAngle*(FirstLayerNum - i - 1)) + " " + x + "," + y + ")" ;
-                }
-            }
-        })
+            });
+    }; 
+    $scope.drawTree()   
 });
 

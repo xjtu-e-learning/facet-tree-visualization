@@ -2,10 +2,32 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible">
+    <title>二维分面树构建</title>
+    <link rel="stylesheet" href="./node_modules/angularjs-slider/dist/rzslider.css" type="text/css">
 </head>
 
 <body>
-    <svg width="600" height="1000"></svg>
+    <div ng-app="myApp" ng-controller="myCtrl" style="display: inline-flex">
+        <div style="display: inline" id="mysvg"><svg width="600" height="800"></svg></div>
+        <div style="display: inline">
+            <div>一级分面宽度:<rzslider rz-slider-model="firstLayerWidth" rz-slider-options="firstLayerWidthOptions" style="width: 300px">
+            </rzslider></div>
+            <div>一级分面间隔:<rzslider rz-slider-model="firstLayerInterval" rz-slider-options="firstLayerIntervalOptions" style="width: 300px">
+                </rzslider></div>
+            <div>一级分面弯曲的初始角度:<rzslider rz-slider-model="initialAngle" rz-slider-options="initialAngleOptions" style="width: 300px">
+                </rzslider></div>
+            <div>一级分面之间角度差:<rzslider rz-slider-model="deltaAngle" rz-slider-options="deltaAngleOptions" style="width: 300px">
+                </rzslider></div>
+            <div>
+                数字以','隔开(300,350,400,450,400,350,300,260):<input type="text" ng-model="data""/>
+            </div>
+            <button ng-click="drawTree()">更新</button>
+        </div>
+    </div>
+    <script type="text/javascript" src="./node_modules/angular/angular.js"></script>
+    <script type="text/javascript" src="./node_modules/angularjs-slider/dist/rzslider.js"></script>
     <script type="text/javascript" src="./node_modules/d3/dist/d3.js"></script>
     <script type="text/javascript" src="./node_modules/jquery/dist/jquery.js"></script>
     <script type="text/javascript" src="./index.js"></script>
