@@ -1,5 +1,5 @@
 var app = angular.module('myApp',['rzModule']);
-
+var data;
 app.controller('myCtrl', function($scope){
 
     $scope.slider = {
@@ -44,21 +44,23 @@ app.controller('myCtrl', function($scope){
     $scope.FirstLayerNum = $scope.dataset.length;
     
     $scope.drawTree = function(){
-        // data = {};
-        // $.ajax({
-        //     type: "GET",
-        //     url: "./tree(data_structure).json",
-        //     data: {},
-        //     dataType: "json",
-        //     success: function(response){
-        //         // console.log(response.data);
-        //         data = response.data;
-        //     },
-        //     error: function(e){
-        //         console.log(e);
-        //     }
-        // });
+        data = {};
+        $.ajax({
+            type: "GET",
+            url: "./tree(data_structure).json",
+            data: {},
+            dataType: "json",
+            success: function(response){
+                console.log(response.data);
+                data = response.data;
+                console.log(processData(data));
+            },
+            error: function(e){
+                console.log(e);
+            }
+        });
         $scope.dataset = [];
+        // 输入框读入各一级分枝高度
         $scope.data !== undefined && $scope.data.split(',').forEach(element => {
             $scope.dataset.push(parseInt(element));
         });
@@ -69,14 +71,17 @@ app.controller('myCtrl', function($scope){
             .data($scope.dataset)
             .enter()
             .append("rect")
+            // 计算一级分枝左上角纵坐标
             .attr("y",function(d){
                 return $scope.canvasHeight-50-d;
             })
+            // 计算一级分枝左上角横坐标
             .attr("x",function(d,i){
-                // return i*30;
+                // 如果一级分枝数量是奇数
                 if($scope.FirstLayerNum%2){
                     return $scope.canvasWidth/2 - $scope.firstLayerWidth/2 - ($scope.firstLayerInterval + $scope.firstLayerWidth)*($scope.FirstLayerNum-1)/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
                 }
+                // 如果一级分枝数量是偶数
                 else{
                     return $scope.canvasWidth/2 + $scope.firstLayerInterval/2 - ($scope.firstLayerWidth + $scope.firstLayerInterval)*$scope.FirstLayerNum/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
                 }
@@ -85,6 +90,7 @@ app.controller('myCtrl', function($scope){
                 return d;
             })
             .attr("width",$scope.firstLayerWidth)
+            // 各分枝颜色
             .attr("fill",function(d,i){
                 return $scope.color[i];
             });
@@ -95,6 +101,7 @@ app.controller('myCtrl', function($scope){
             // .attr("transform",function(d,i){
             //     return "rotate(-45 "+i*30+",150)"
             // })
+        // 画一级分枝弯折部分
         var g1 = d3.select("body").select("svg").append("g")
             .selectAll("rect")
             .data($scope.dataset)
@@ -163,6 +170,24 @@ app.controller('myCtrl', function($scope){
                 }
             });
     }; 
-    $scope.drawTree()   
+    $scope.drawTree();   
 });
 
+processData = function(arr){
+    var branchWithSecondLayer = [];
+    var branchWithoutSecondLayer = [];
+    arr.children.forEach(element => {
+       if(element.children[0].type === 'branch'){
+           branchWithSecondLayer.push(element);
+       } else{
+           branchWithoutSecondLayer.push(element);
+       }
+    });
+    branchWithoutSecondLayer.sort(sortBranch);
+    branchWithSecondLayer.sort(sortBranch);
+    return branchWithSecondLayer.concat(branchWithoutSecondLayer);
+};
+
+sortBranch = function(a, b){
+    return b.children.length - a.children.length;
+};
