@@ -38,12 +38,13 @@ app.controller('myCtrl', function($scope){
       };
     // 1:Dust Red 2:Volcano 3:Sunset Orange 4:Calendula Cold 5:Sunrise Yellow 6:Lime 7:Polar Green 8:Cyan 9:Daybreak Blue 10:Geek Blue 11:Golden Purple 12:Magenta
     $scope.color = ['#D32731','#DA5526','#E18B29','#E7AC2F','#F1DA38','#B1D837','#7FC236','#6EC1C1','#548FFB','#3E55E7','#6431CC','#CB3392']
-        
-    $scope.dataset = [300,350,400,450,400,350,300,260];
+
     // 一级分面数量
-    $scope.FirstLayerNum = $scope.dataset.length;
+    $scope.FirstLayerNum = 0;
     
-    $scope.drawTree = function(){
+
+
+    $scope.getData = function(){
         data = {};
         $.ajax({
             type: "GET",
@@ -53,12 +54,19 @@ app.controller('myCtrl', function($scope){
             success: function(response){
                 console.log(response.data);
                 data = response.data;
-                console.log(processData(data));
+                data = processData(data);
+                $scope.FirstLayerNum = data.length;
+                $scope.drawTree();
             },
             error: function(e){
                 console.log(e);
             }
         });
+    };
+
+    $scope.getData();
+
+    $scope.drawTree = function(){
         $scope.dataset = [];
         // 输入框读入各一级分枝高度
         $scope.data !== undefined && $scope.data.split(',').forEach(element => {
@@ -68,12 +76,12 @@ app.controller('myCtrl', function($scope){
 
         var g = d3.select("div#mysvg").append("svg").attr("width","600px").attr("height","800px").append("g")
             .selectAll("rect")
-            .data($scope.dataset)
+            .data(data)
             .enter()
             .append("rect")
             // 计算一级分枝左上角纵坐标
             .attr("y",function(d){
-                return $scope.canvasHeight-50-d;
+                return $scope.canvasHeight-50-d.h;
             })
             // 计算一级分枝左上角横坐标
             .attr("x",function(d,i){
@@ -87,7 +95,7 @@ app.controller('myCtrl', function($scope){
                 }
             })
             .attr("height",function(d){
-                return d;
+                return d.h;
             })
             .attr("width",$scope.firstLayerWidth)
             // 各分枝颜色
@@ -104,11 +112,11 @@ app.controller('myCtrl', function($scope){
         // 画一级分枝弯折部分
         var g1 = d3.select("body").select("svg").append("g")
             .selectAll("rect")
-            .data($scope.dataset)
+            .data(data)
             .enter()
             .append("rect")
             .attr("y",function(d){
-                return $scope.canvasHeight-50-d;
+                return $scope.canvasHeight-50-d.h;
             })
             .attr("x",function(d,i){
                 // return i*30;
@@ -136,9 +144,9 @@ app.controller('myCtrl', function($scope){
             })
             .attr("height",function(d,i){
                 if($scope.FirstLayerNum%2 && i === ($scope.FirstLayerNum-1)/2){
-                    return d/8;
+                    return d.h/4;
                 }
-                return d/4;
+                return d.h/4;
             })
             .attr("width",$scope.firstLayerWidth)
             .attr("fill",function(d,i){
@@ -146,7 +154,7 @@ app.controller('myCtrl', function($scope){
             })
             //旋转
             .attr("transform",function(d,i){
-                y = $scope.canvasHeight-50-d;
+                y = $scope.canvasHeight-50-d.h;
                 if($scope.FirstLayerNum%2){
                     x = $scope.canvasWidth/2 - $scope.firstLayerWidth/2 - ($scope.firstLayerInterval + $scope.firstLayerWidth)*($scope.FirstLayerNum-1)/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
                     if(x === $scope.canvasWidth/2 - $scope.firstLayerWidth/2){
@@ -170,12 +178,13 @@ app.controller('myCtrl', function($scope){
                 }
             });
     }; 
-    $scope.drawTree();   
 });
 
 processData = function(arr){
     var branchWithSecondLayer = [];
     var branchWithoutSecondLayer = [];
+    var height = [450, 440, 430, 415, 400, 385, 370, 350, 330, 310, 290, 270, 250, 210];
+    // 按有无二级分面对一级分面进行筛选
     arr.children.forEach(element => {
        if(element.children[0].type === 'branch'){
            branchWithSecondLayer.push(element);
@@ -183,9 +192,31 @@ processData = function(arr){
            branchWithoutSecondLayer.push(element);
        }
     });
+    // 没有二级分面的一级分面按二级分面下的碎片数量降序
     branchWithoutSecondLayer.sort(sortBranch);
+    // 有二级分面的一级分面按二级分面数量降序
     branchWithSecondLayer.sort(sortBranch);
-    return branchWithSecondLayer.concat(branchWithoutSecondLayer);
+    // 对排序后的一级分面进行拼接
+    let sortedBranch = branchWithSecondLayer.concat(branchWithoutSecondLayer);
+    // 将降序的数组重排，权重大的在中间
+    let resultBranch = [];
+    for(let i = 0; i < sortedBranch.length; i += 2){
+        if(i < sortedBranch.length){
+            sortedBranch[i].h = height[i];  
+            resultBranch.push(sortedBranch[i]);
+        }
+        else{
+            return resultBranch;
+        }
+        if(i + 1 < sortedBranch.length){
+            sortedBranch[i + 1].h = height[i + 1];
+            resultBranch.unshift(sortedBranch[i + 1]);
+        }
+        else{
+            return resultBranch;
+        }
+    }
+    return resultBranch;
 };
 
 sortBranch = function(a, b){
