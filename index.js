@@ -1,5 +1,9 @@
 var app = angular.module('myApp',['rzModule']);
 var data;
+var angles = [];
+var xs = [];
+var minHeight = 0;
+var height = [450, 440, 430, 415, 400, 385, 370, 350, 330, 310, 290, 270, 250, 210];
 app.controller('myCtrl', function($scope){
 
     $scope.slider = {
@@ -9,14 +13,14 @@ app.controller('myCtrl', function($scope){
     $scope.canvasWidth = 500;
     $scope.canvasHeight = 800;
     // 一级分面宽度
-    $scope.firstLayerWidth = 14;
+    $scope.firstLayerWidth = 16;
     $scope.firstLayerWidthOptions = {
       floor: 0,
       ceil: $scope.firstLayerWidth*2,
       step: 1,
     };
     // 一级分面间隔
-    $scope.firstLayerInterval = 4;
+    $scope.firstLayerInterval = 8;
     $scope.firstLayerIntervalOptions = {
         floor: 0,
         ceil: $scope.firstLayerInterval*4,
@@ -56,7 +60,10 @@ app.controller('myCtrl', function($scope){
                 data = response.data;
                 data = processData(data);
                 $scope.FirstLayerNum = data.length;
+                minHeight = height[$scope.FirstLayerNum];
                 $scope.drawTree();
+                console.log(angles);
+                console.log(xs);
             },
             error: function(e){
                 console.log(e);
@@ -87,11 +94,15 @@ app.controller('myCtrl', function($scope){
             .attr("x",function(d,i){
                 // 如果一级分枝数量是奇数
                 if($scope.FirstLayerNum%2){
-                    return $scope.canvasWidth/2 - $scope.firstLayerWidth/2 - ($scope.firstLayerInterval + $scope.firstLayerWidth)*($scope.FirstLayerNum-1)/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
+                    x = $scope.canvasWidth/2 - $scope.firstLayerWidth/2 - ($scope.firstLayerInterval + $scope.firstLayerWidth)*($scope.FirstLayerNum-1)/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
+                    xs.push(x);
+                    return x;
                 }
                 // 如果一级分枝数量是偶数
                 else{
-                    return $scope.canvasWidth/2 + $scope.firstLayerInterval/2 - ($scope.firstLayerWidth + $scope.firstLayerInterval)*$scope.FirstLayerNum/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
+                    x = $scope.canvasWidth/2 + $scope.firstLayerInterval/2 - ($scope.firstLayerWidth + $scope.firstLayerInterval)*$scope.FirstLayerNum/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
+                    xs.push(x);
+                    return x;
                 }
             })
             .attr("height",function(d){
@@ -158,32 +169,57 @@ app.controller('myCtrl', function($scope){
                 if($scope.FirstLayerNum%2){
                     x = $scope.canvasWidth/2 - $scope.firstLayerWidth/2 - ($scope.firstLayerInterval + $scope.firstLayerWidth)*($scope.FirstLayerNum-1)/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
                     if(x === $scope.canvasWidth/2 - $scope.firstLayerWidth/2){
+                        angles.push(180);
                         return "rotate(180 " + $scope.canvasWidth/2 + "," + y + ")" ;
                     }
                     else if(x < $scope.canvasWidth/2){
+                        angles.push($scope.initialAngle + $scope.deltaAngle*i);
                         return "rotate(" + ($scope.initialAngle + $scope.deltaAngle*i) + " " + (x+$scope.firstLayerWidth) + "," + y + ")" ;
                     }
                     else{
+                        angles.push(-$scope.initialAngle - $scope.deltaAngle*($scope.FirstLayerNum - i - 1));
                         return "rotate(" + (-$scope.initialAngle - $scope.deltaAngle*($scope.FirstLayerNum - i - 1)) + " " + x + "," + y + ")" ;
                     }
                 }
                 else{
                     x = $scope.canvasWidth/2 + $scope.firstLayerInterval/2 - ($scope.firstLayerWidth + $scope.firstLayerInterval)*$scope.FirstLayerNum/2 + ($scope.firstLayerInterval+$scope.firstLayerWidth) * i;
                     if(x < $scope.canvasWidth/2){
+                        angles.push($scope.initialAngle + $scope.deltaAngle*i);
                         return "rotate(" + ($scope.initialAngle + $scope.deltaAngle*i) + " " + (x+$scope.firstLayerWidth) + "," + y + ")" ;
                     }
                     else{
+                        angles.push(-$scope.initialAngle - $scope.deltaAngle*($scope.FirstLayerNum - i - 1));
                         return "rotate(" + (-$scope.initialAngle - $scope.deltaAngle*($scope.FirstLayerNum - i - 1)) + " " + x + "," + y + ")" ;
                     }
                 }
             });
+        var texts = d3.select("body").select("svg").append("g")
+            .selectAll("text")
+            .data(data)
+            .enter()
+            .append("text")
+            .attr("font-size", "14px")
+            .attr("y", function(d){
+                return $scope.canvasHeight-50-minHeight;
+            })
+            .attr("x", function(d,i){
+                return xs[i];
+            })
+            .attr("width", $scope.firstLayerWidth +  "px")
+            .attr("fill", "white")
+            .text(function(d){
+                return d.facetName;
+            });
+        
+        var wrap = d3.textwrap().bounds({height: 48, width: 16});
+        d3.selectAll('text').call(wrap);
     }; 
 });
 
 processData = function(arr){
     var branchWithSecondLayer = [];
     var branchWithoutSecondLayer = [];
-    var height = [450, 440, 430, 415, 400, 385, 370, 350, 330, 310, 290, 270, 250, 210];
+    
     // 按有无二级分面对一级分面进行筛选
     arr.children.forEach(element => {
        if(element.children[0].type === 'branch'){

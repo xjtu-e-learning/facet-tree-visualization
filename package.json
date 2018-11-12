@@ -9,6 +9,7 @@
     "angular": "1.7.5",
     "angularjs-slider": "^6.6.1",
     "d3": "^5.7.0",
+    "d3-textwrap": "^2.0.2",
     "jquery": "^3.3.1"
   }
 }
