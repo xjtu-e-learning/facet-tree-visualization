@@ -1,10 +1,11 @@
-var app = angular.module('myApp',['rzModule']);
+var app = angular.module("myApp",["rzModule"]);
 var data;
 var angles = [];
 var xs = [];
 var minHeight = 0;
 var height = [450, 440, 430, 415, 400, 385, 370, 350, 330, 310, 290, 270, 250, 210];
-app.controller('myCtrl', function($scope){
+var bounds = [];
+app.controller("myCtrl", function($scope){
 
     $scope.slider = {
         value: 10
@@ -41,7 +42,7 @@ app.controller('myCtrl', function($scope){
         step: 1,
       };
     // 1:Dust Red 2:Volcano 3:Sunset Orange 4:Calendula Cold 5:Sunrise Yellow 6:Lime 7:Polar Green 8:Cyan 9:Daybreak Blue 10:Geek Blue 11:Golden Purple 12:Magenta
-    $scope.color = ['#D32731','#DA5526','#E18B29','#E7AC2F','#F1DA38','#B1D837','#7FC236','#6EC1C1','#548FFB','#3E55E7','#6431CC','#CB3392']
+    $scope.color = ["#D32731","#DA5526","#E18B29","#E7AC2F","#F1DA38","#B1D837","#7FC236","#6EC1C1","#548FFB","#3E55E7","#6431CC","#CB3392"]
 
     // 一级分面数量
     $scope.FirstLayerNum = 0;
@@ -76,7 +77,7 @@ app.controller('myCtrl', function($scope){
     $scope.drawTree = function(){
         $scope.dataset = [];
         // 输入框读入各一级分枝高度
-        $scope.data !== undefined && $scope.data.split(',').forEach(element => {
+        $scope.data !== undefined && $scope.data.split(",").forEach(element => {
             $scope.dataset.push(parseInt(element));
         });
         d3.selectAll("svg").remove();
@@ -205,14 +206,17 @@ app.controller('myCtrl', function($scope){
             .attr("x", function(d,i){
                 return xs[i];
             })
-            .attr("width", $scope.firstLayerWidth +  "px")
-            .attr("fill", "white")
-            .text(function(d){
-                return d.facetName;
-            });
-        
-        var wrap = d3.textwrap().bounds({height: 48, width: 16});
-        d3.selectAll('text').call(wrap);
+            .attr("fill", "white");
+        for(let i = 0; i < $scope.FirstLayerNum; i++){
+            d3.select(texts._groups[0][i])
+                .selectAll("tspan")
+                .data(data[i].facetName.split(""))
+                .enter()
+                .append("tspan")
+                .attr("x", xs[i])
+                .attr("dy", "1em")
+                .text(function(d){return d;});
+        }
     }; 
 });
 
@@ -222,7 +226,7 @@ processData = function(arr){
     
     // 按有无二级分面对一级分面进行筛选
     arr.children.forEach(element => {
-       if(element.children[0].type === 'branch'){
+       if(element.children[0].type === "branch"){
            branchWithSecondLayer.push(element);
        } else{
            branchWithoutSecondLayer.push(element);
