@@ -4,10 +4,48 @@ var angles = [];
 var xs = [];
 var ys = [];
 var minHeight = 0;
-var height = [450, 440, 430, 415, 400, 385, 370, 350, 330, 310, 290, 270, 250, 210];
+var height = [400, 390, 380, 365, 350, 335, 320, 300, 280, 260, 240, 220, 200, 160];
 var foldLength = [];
 
-app.controller("myCtrl", function($scope){
+
+
+app.controller("myCtrl", function($scope,$http){
+
+    $scope.subjects = [];
+    $scope.subject = "";
+    $scope.domain = "";
+    $scope.topic = "";
+    $scope.topics = [];
+    $.ajax({
+        type: "GET",
+        url: "http://yotta.xjtushilei.com:8083/domain/getDomainsGroupBySubject",
+        data: {},
+        dataType: "json",
+        success: function(response){
+            $scope.subjects = response["data"];
+            console.log($scope.subjects);
+        },
+        error: function(e){
+            console.log(e);
+        }
+    });
+
+    $scope.getTopicsByDomainName = function(){
+        // console.log($scope.domain)
+        $.ajax({
+            type: "GET",
+            url: "http://yotta.xjtushilei.com:8083/topic/getTopicsByDomainName?domainName=" + $scope.domain.domainName,
+            data: {},
+            dataType: "json",
+            success: function(response){
+                $scope.topics = response["data"];
+                // console.log($scope.subjects);
+            },
+            error: function(e){
+                console.log(e);
+            }
+        });
+    }
 
     $scope.slider = {
         value: 10
@@ -16,7 +54,7 @@ app.controller("myCtrl", function($scope){
     $scope.canvasWidth = 500;
     $scope.canvasHeight = 800;
     // 一级分面宽度
-    $scope.firstLayerWidth = 16;
+    $scope.firstLayerWidth = 20;
     $scope.firstLayerWidthOptions = {
       floor: 0,
       ceil: $scope.firstLayerWidth*2,
@@ -30,14 +68,14 @@ app.controller("myCtrl", function($scope){
         step: 1,
       };
     // 一级分面弯曲的初始角度
-    $scope.initialAngle = 125;
+    $scope.initialAngle = 116;
     $scope.initialAngleOptions = {
-        floor: 0,
-        ceil: $scope.initialAngle,
+        floor: 110,
+        ceil: 125,
         step: 1,
       };
     // 一级分面之间角度差
-    $scope.deltaAngle = 15;
+    $scope.deltaAngle = 10;
     $scope.deltaAngleOptions = {
         floor: 0,
         ceil: $scope.deltaAngle*2,
@@ -53,7 +91,7 @@ app.controller("myCtrl", function($scope){
         data = {};
         $.ajax({
             type: "GET",
-            url: "./tree(data_structure).json",
+            url: "http://yotta.xjtushilei.com:8083/topic/getCompleteTopicByNameAndDomainName?domainName="+$scope.domain.domainName+"&topicName=" + $scope.topic.topicName,
             data: {},
             dataType: "json",
             success: function(response){
@@ -61,7 +99,7 @@ app.controller("myCtrl", function($scope){
                 data = response.data;
                 data = processData(data);
                 $scope.FirstLayerNum = data.length;
-                minHeight = height[$scope.FirstLayerNum];
+                minHeight = height[height.length - 1];
                 $scope.drawTree();
                 console.log("angles: " + angles);
                 console.log("xs: " + xs);
@@ -74,10 +112,14 @@ app.controller("myCtrl", function($scope){
         });
     };
 
-    $scope.getData();
+    // $scope.getData();
 
     $scope.drawTree = function(){
         $scope.dataset = [];
+        angles = [];
+        xs = [];
+        ys = [];
+        foldLength = [];
         // 输入框读入各一级分枝高度
         $scope.data !== undefined && $scope.data.split(",").forEach(element => {
             $scope.dataset.push(parseInt(element));
@@ -217,8 +259,8 @@ app.controller("myCtrl", function($scope){
                 .data(data[i].facetName.split(""))
                 .enter()
                 .append("tspan")
-                .attr("x", xs[i])
-                .attr("dy", "1em")
+                .attr("x", xs[i] + ($scope.firstLayerWidth - 14) / 2)
+                .attr("dy", "1.5em")
                 .text(function(d){return d;});
         }
 
@@ -228,12 +270,12 @@ app.controller("myCtrl", function($scope){
             .enter()
             .append("circle")
             .attr("cx", function(d,i){
-                return xs[i] + $scope.firstLayerWidth + Math.cos(Math.PI*(270-angles[i])/180) * foldLength[i] * 1.8;
+                return xs[i] + $scope.firstLayerWidth/2 + Math.cos(Math.PI*(270-angles[i])/180) * foldLength[i] * 1.8;
             })
             .attr("cy", function(d,i){
                 return ys[i] - Math.sin(Math.PI*(270-angles[i])/180) * foldLength[i] * 1.8;
             })
-            .attr("r", 10)
+            .attr("r", 20)
             .attr("fill", function(d,i){
                 return $scope.color[i];
             });
@@ -245,12 +287,12 @@ processData = function(arr){
     var branchWithoutSecondLayer = [];
     
     // 按有无二级分面对一级分面进行筛选
-    arr.children.forEach(element => {
-       if(element.children[0].type === "branch"){
-           branchWithSecondLayer.push(element);
-       } else{
-           branchWithoutSecondLayer.push(element);
-       }
+    arr.children.forEach((element,index) => {
+        if(element.children[0] !== undefined && element.children[0].type === "branch"){
+            branchWithSecondLayer.push(element);
+        } else{
+            branchWithoutSecondLayer.push(element);
+        }
     });
     // 没有二级分面的一级分面按二级分面下的碎片数量降序
     branchWithoutSecondLayer.sort(sortBranch);
@@ -262,14 +304,14 @@ processData = function(arr){
     let resultBranch = [];
     for(let i = 0; i < sortedBranch.length; i += 2){
         if(i < sortedBranch.length){
-            sortedBranch[i].h = height[i];  
+            sortedBranch[i].h = height[height.length + i - sortedBranch.length];  
             resultBranch.push(sortedBranch[i]);
         }
         else{
             return resultBranch;
         }
         if(i + 1 < sortedBranch.length){
-            sortedBranch[i + 1].h = height[i + 1];
+            sortedBranch[i + 1].h = height[height.length + i - sortedBranch.length + 1];
             resultBranch.unshift(sortedBranch[i + 1]);
         }
         else{

@@ -20,7 +20,15 @@
                 </rzslider></div>
             <div>一级分面之间角度差:<rzslider rz-slider-model="deltaAngle" rz-slider-options="deltaAngleOptions" style="width: 300px">
                 </rzslider></div>
-            <button ng-click="drawTree()">更新</button>
+            <div>
+                <select class="btn btn-sm btn-primary" ng-model="subject" ng-options="subject.subjectName for subject in subjects">
+                </select>
+                <select class="btn btn-sm btn-primary" ng-model="domain" ng-options="domain.domainName for domain in subject.domains" ng-change="getTopicsByDomainName()">
+                </select>
+                <select class="btn btn-sm btn-primary" ng-model="topic" ng-options="topic.topicName for topic in topics" >
+                </select>
+            </div>
+            <button ng-click="getData()">更新</button>
         </div>
     </div>
     <script type="text/javascript" src="./node_modules/angular/angular.js"></script>
