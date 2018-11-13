@@ -2,9 +2,11 @@ var app = angular.module("myApp",["rzModule"]);
 var data;
 var angles = [];
 var xs = [];
+var ys = [];
 var minHeight = 0;
 var height = [450, 440, 430, 415, 400, 385, 370, 350, 330, 310, 290, 270, 250, 210];
-var bounds = [];
+var foldLength = [];
+
 app.controller("myCtrl", function($scope){
 
     $scope.slider = {
@@ -47,8 +49,6 @@ app.controller("myCtrl", function($scope){
     // 一级分面数量
     $scope.FirstLayerNum = 0;
     
-
-
     $scope.getData = function(){
         data = {};
         $.ajax({
@@ -63,8 +63,10 @@ app.controller("myCtrl", function($scope){
                 $scope.FirstLayerNum = data.length;
                 minHeight = height[$scope.FirstLayerNum];
                 $scope.drawTree();
-                console.log(angles);
-                console.log(xs);
+                console.log("angles: " + angles);
+                console.log("xs: " + xs);
+                console.log("foldLength: " + foldLength);
+                console.log("ys: " + ys);
             },
             error: function(e){
                 console.log(e);
@@ -89,6 +91,7 @@ app.controller("myCtrl", function($scope){
             .append("rect")
             // 计算一级分枝左上角纵坐标
             .attr("y",function(d){
+                ys.push($scope.canvasHeight-50-d.h);
                 return $scope.canvasHeight-50-d.h;
             })
             // 计算一级分枝左上角横坐标
@@ -155,9 +158,10 @@ app.controller("myCtrl", function($scope){
                 }
             })
             .attr("height",function(d,i){
-                if($scope.FirstLayerNum%2 && i === ($scope.FirstLayerNum-1)/2){
-                    return d.h/4;
-                }
+                // if($scope.FirstLayerNum%2 && i === ($scope.FirstLayerNum-1)/2){
+                //     return d.h/4;
+                // }
+                foldLength.push(d.h/4);
                 return d.h/4;
             })
             .attr("width",$scope.firstLayerWidth)
@@ -217,6 +221,22 @@ app.controller("myCtrl", function($scope){
                 .attr("dy", "1em")
                 .text(function(d){return d;});
         }
+
+        var circles = d3.select("body").select("svg").append("g")
+            .selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d,i){
+                return xs[i] + $scope.firstLayerWidth + Math.cos(Math.PI*(270-angles[i])/180) * foldLength[i] * 1.8;
+            })
+            .attr("cy", function(d,i){
+                return ys[i] - Math.sin(Math.PI*(270-angles[i])/180) * foldLength[i] * 1.8;
+            })
+            .attr("r", 10)
+            .attr("fill", function(d,i){
+                return $scope.color[i];
+            });
     }; 
 });
 
