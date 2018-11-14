@@ -203,8 +203,8 @@ app.controller("myCtrl", function($scope,$http){
                 // if($scope.FirstLayerNum%2 && i === ($scope.FirstLayerNum-1)/2){
                 //     return d.h/4;
                 // }
-                foldLength.push(d.h/4);
-                return d.h/4;
+                foldLength.push(d.h/3);
+                return d.h/3;
             })
             .attr("width",$scope.firstLayerWidth)
             .attr("fill",function(d,i){
