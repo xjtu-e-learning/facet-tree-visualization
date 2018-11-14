@@ -6,7 +6,7 @@ var ys = [];
 var minHeight = 0;
 var height = [400, 390, 380, 365, 350, 335, 320, 300, 280, 260, 240, 220, 200, 160];
 var foldLength = [];
-
+var branchLimits = 7;
 
 
 app.controller("myCtrl", function($scope,$http){
@@ -68,22 +68,22 @@ app.controller("myCtrl", function($scope,$http){
         step: 1,
       };
     // 一级分面弯曲的初始角度
-    $scope.initialAngle = 116;
+    $scope.initialAngle = 125;
     $scope.initialAngleOptions = {
         floor: 110,
         ceil: 125,
         step: 1,
       };
     // 一级分面之间角度差
-    $scope.deltaAngle = 10;
+    $scope.deltaAngle = 16;
     $scope.deltaAngleOptions = {
         floor: 0,
         ceil: $scope.deltaAngle*2,
         step: 1,
       };
     // 1:Dust Red 2:Volcano 3:Sunset Orange 4:Calendula Cold 5:Sunrise Yellow 6:Lime 7:Polar Green 8:Cyan 9:Daybreak Blue 10:Geek Blue 11:Golden Purple 12:Magenta
-    $scope.color = ["#D32731","#DA5526","#E18B29","#E7AC2F","#F1DA38","#B1D837","#7FC236","#6EC1C1","#548FFB","#3E55E7","#6431CC","#CB3392"]
-
+    // $scope.color = ["#D32731","#DA5526","#E18B29","#E7AC2F","#F1DA38","#B1D837","#7FC236","#6EC1C1","#548FFB","#3E55E7","#6431CC","#CB3392"]
+    $scope.color = ["#B50010", "#E3A407", "#618FE3", "#E14773", "#547400", "#7C21FF", "#7F572B", "#7CC7C0"];
     // 一级分面数量
     $scope.FirstLayerNum = 0;
     
@@ -99,7 +99,11 @@ app.controller("myCtrl", function($scope,$http){
                 data = response.data;
                 data = processData(data);
                 $scope.FirstLayerNum = data.length;
-                minHeight = height[height.length - 1];
+                if(data.length > 7) {
+                    minHeight = height[height.length - 2];
+                }else{
+                    minHeight = height[height.length - 1];
+                }               
                 $scope.drawTree();
                 console.log("angles: " + angles);
                 console.log("xs: " + xs);
@@ -246,8 +250,8 @@ app.controller("myCtrl", function($scope,$http){
             .enter()
             .append("text")
             .attr("font-size", "14px")
-            .attr("y", function(d){
-                return $scope.canvasHeight-50-minHeight;
+            .attr("y", function(d,i){
+                return $scope.canvasHeight-50-d.h;
             })
             .attr("x", function(d,i){
                 return xs[i];
@@ -260,7 +264,7 @@ app.controller("myCtrl", function($scope,$http){
                 .enter()
                 .append("tspan")
                 .attr("x", xs[i] + ($scope.firstLayerWidth - 14) / 2)
-                .attr("dy", "1.5em")
+                .attr("dy", "1.2em")
                 .text(function(d){return d;});
         }
 
@@ -279,6 +283,13 @@ app.controller("myCtrl", function($scope,$http){
             .attr("fill", function(d,i){
                 return $scope.color[i];
             });
+
+        // 显示主题名
+        var name = d3.select("body").select("svg").append("g")
+            .append("text")
+            .attr("x", $scope.canvasWidth/2 - 50)
+            .attr("y", $scope.canvasHeight - 20)
+            .text($scope.topic.topicName);
     }; 
 });
 
@@ -288,7 +299,7 @@ processData = function(arr){
     
     // 按有无二级分面对一级分面进行筛选
     arr.children.forEach((element,index) => {
-        if(element.children[0] !== undefined && element.children[0].type === "branch"){
+        if(element.containChildrenFacet === true){
             branchWithSecondLayer.push(element);
         } else{
             branchWithoutSecondLayer.push(element);
@@ -300,23 +311,58 @@ processData = function(arr){
     branchWithSecondLayer.sort(sortBranch);
     // 对排序后的一级分面进行拼接
     let sortedBranch = branchWithSecondLayer.concat(branchWithoutSecondLayer);
+    console.log(sortedBranch);
     // 将降序的数组重排，权重大的在中间
     let resultBranch = [];
-    for(let i = 0; i < sortedBranch.length; i += 2){
-        if(i < sortedBranch.length){
-            sortedBranch[i].h = height[height.length + i - sortedBranch.length];  
-            resultBranch.push(sortedBranch[i]);
+    if(sortedBranch.length < branchLimits + 1){
+        for(let i = 0; i < sortedBranch.length; i += 2){
+            if(i < sortedBranch.length){
+                sortedBranch[i].h = height[height.length + i - sortedBranch.length];  
+                resultBranch.unshift(sortedBranch[i]);
+            }
+            else{
+                return resultBranch;
+            }
+            if(i + 1 < sortedBranch.length){
+                sortedBranch[i + 1].h = height[height.length + i - sortedBranch.length + 1];
+                resultBranch.push(sortedBranch[i + 1]);
+            }
+            else{
+                return resultBranch;
+            }
         }
-        else{
-            return resultBranch;
+    }
+    else {
+        let combinedBranch = {
+            children: [],
+            containChildrenFacet: true,
+            facetId: -1,
+            facetName: "其他分面",
+            h: height[height.length - 1],
+            parentFacetId: null,
+            topicId: null,
+            type: "branch"
+        };
+        for(let i = 0; i < branchLimits; i += 2){
+            if(i < branchLimits){
+                sortedBranch[i].h = height[height.length + i - branchLimits - 1];  
+                resultBranch.unshift(sortedBranch[i]);
+            }
+            else{
+                break;
+            }
+            if(i + 1 < branchLimits){
+                sortedBranch[i + 1].h = height[height.length + i - branchLimits];
+                resultBranch.push(sortedBranch[i + 1]);
+            }
+            else{
+                break;
+            }
         }
-        if(i + 1 < sortedBranch.length){
-            sortedBranch[i + 1].h = height[height.length + i - sortedBranch.length + 1];
-            resultBranch.unshift(sortedBranch[i + 1]);
+        for(let i = branchLimits; i < sortedBranch.length; i++){
+            combinedBranch.children.push(sortedBranch[i]);
         }
-        else{
-            return resultBranch;
-        }
+        resultBranch.push(combinedBranch);
     }
     return resultBranch;
 };

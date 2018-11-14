@@ -12,19 +12,22 @@
     <div ng-app="myApp" ng-controller="myCtrl" style="display: inline-flex">
         <div style="display: inline" id="mysvg"><svg width="600" height="800"></svg></div>
         <div style="display: inline">
-            <div>一级分面宽度:<rzslider rz-slider-model="firstLayerWidth" rz-slider-options="firstLayerWidthOptions" style="width: 300px">
+            <!-- <div>一级分面宽度:<rzslider rz-slider-model="firstLayerWidth" rz-slider-options="firstLayerWidthOptions" style="width: 300px">
             </rzslider></div>
             <div>一级分面间隔:<rzslider rz-slider-model="firstLayerInterval" rz-slider-options="firstLayerIntervalOptions" style="width: 300px">
                 </rzslider></div>
             <div>一级分面弯曲的初始角度:<rzslider rz-slider-model="initialAngle" rz-slider-options="initialAngleOptions" style="width: 300px">
                 </rzslider></div>
             <div>一级分面之间角度差:<rzslider rz-slider-model="deltaAngle" rz-slider-options="deltaAngleOptions" style="width: 300px">
-                </rzslider></div>
+                </rzslider></div> -->
             <div>
+                选择学科：
                 <select class="btn btn-sm btn-primary" ng-model="subject" ng-options="subject.subjectName for subject in subjects">
                 </select>
+                选择课程：
                 <select class="btn btn-sm btn-primary" ng-model="domain" ng-options="domain.domainName for domain in subject.domains" ng-change="getTopicsByDomainName()">
                 </select>
+                选择主题：
                 <select class="btn btn-sm btn-primary" ng-model="topic" ng-options="topic.topicName for topic in topics" >
                 </select>
             </div>
