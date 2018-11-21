@@ -7,7 +7,9 @@ var minHeight = 0;
 var height = [400, 390, 380, 365, 350, 335, 320, 300, 280, 260, 240, 220, 200, 160];
 var foldLength = [];
 var branchLimits = 7;
-
+var div = d3.select("body").select("#mysvg").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
 
 app.controller("myCtrl", function ($scope, $http) {
 
@@ -91,8 +93,8 @@ app.controller("myCtrl", function ($scope, $http) {
         data = {};
         $.ajax({
             type: "GET",
-            // url: "http://yotta.xjtushilei.com:8083/topic/getCompleteTopicByNameAndDomainName?domainName="+$scope.domain.domainName+"&topicName=" + $scope.topic.topicName,
-            url: "./tree(data_structure).json",
+            url: "http://yotta.xjtushilei.com:8083/topic/getCompleteTopicByNameAndDomainName?domainName="+$scope.domain.domainName+"&topicName=" + $scope.topic.topicName,
+            // url: "./tree(data_structure).json",
             data: {},
             dataType: "json",
             success: function (response) {
@@ -117,7 +119,7 @@ app.controller("myCtrl", function ($scope, $http) {
         });
     };
 
-    $scope.getData();
+    // $scope.getData();
 
     $scope.drawTree = function () {
         $scope.dataset = [];
@@ -278,6 +280,28 @@ app.controller("myCtrl", function ($scope, $http) {
             .attr("fill", function (d, i) {
                 return $scope.color[i];
             })
+            .on("mouseover", function(d) {		
+                div.transition()		
+                    .duration(200)		
+                    .style("opacity", 0.9);		
+                div	.html(() => {
+                    if(d.facetId === -1){
+                        return "查看详细分面";
+                    }
+                    if(d.containChildrenFacet === true){
+                        return d.facetName + "<br/>（查看二级分面）";
+                    }else{
+                        return d.facetName;
+                    }
+                })	
+                    .style("left", (d3.event.pageX) + "px")		
+                    .style("top", (d3.event.pageY - 28) + "px");	
+                })					
+            .on("mouseout", function(d) {		
+                div.transition()		
+                    .duration(500)		
+                    .style("opacity", 0);
+            })	
             .on("click", function (d, i) {
                 if (d.children.length !== 0 && d.children[0].type === "branch") {
                     console.log(d.children);
@@ -330,9 +354,31 @@ app.controller("myCtrl", function ($scope, $http) {
                         .attr("r", 30)
                         .attr("fill", $scope.color[i])
                         .call(d3.drag()
-                        .on("start",dragstarted)
-                        .on("drag",dragged)
-                        .on("end",dragended));
+                            .on("start", dragstarted)
+                            .on("drag", dragged)
+                            .on("end", dragended))
+                        .on("mouseover", function(d) {		
+                            div.transition()		
+                                .duration(200)		
+                                .style("opacity", 0.9);		
+                            div	.html(() => {
+                                if(d.facetId === -1){
+                                    return "查看详细分面";
+                                }
+                                if(d.containChildrenFacet === true){
+                                    return d.facetName + "<br/>（查看二级分面）";
+                                }else{
+                                    return d.facetName;
+                                }
+                            })	
+                                .style("left", (d3.event.pageX) + "px")		
+                                .style("top", (d3.event.pageY - 28) + "px");	
+                            })					
+                        .on("mouseout", function(d) {		
+                            div.transition()		
+                                .duration(500)		
+                                .style("opacity", 0);
+                        });
 
                     function ticked() {
                         link
@@ -351,12 +397,12 @@ app.controller("myCtrl", function ($scope, $http) {
                         d.fx = d.x;
                         d.fy = d.y;
                     }
-                    
+
                     function dragged(d) {
                         d.fx = d3.event.x;
                         d.fy = d3.event.y;
                     }
-                    
+
                     function dragended(d) {
                         if (!d3.event.active) simulation.alphaTarget(0);
                         d.fx = null;
@@ -455,5 +501,5 @@ function forceSimulation(nodes, links) {
         .force("link", d3.forceLink(links).id(d => d.id))
         .force("link", d3.forceLink(links).distance(200))
         .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(300,400));
+        .force("center", d3.forceCenter(300, 400));
 }
