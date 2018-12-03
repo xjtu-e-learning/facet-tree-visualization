@@ -89,6 +89,8 @@ app.controller("myCtrl", function ($scope, $http) {
     // 一级分面数量
     $scope.FirstLayerNum = 0;
 
+    $scope.masks = [];
+
     $scope.getData = function () {
         data = {};
         $.ajax({
@@ -123,6 +125,15 @@ app.controller("myCtrl", function ($scope, $http) {
 
     $scope.drawTree = function () {
         $scope.dataset = [];
+
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].children.length !== 0 && data[i].children[0].type === 'branch') {
+            $scope.masks.push(1);
+          } else {
+            $scope.masks.push(0);
+          }
+        }
+
         angles = [];
         xs = [];
         ys = [];
@@ -281,124 +292,110 @@ app.controller("myCtrl", function ($scope, $http) {
             .attr("r", 20)
             .attr("fill", function (d, i) {
                 return $scope.color[i];
-            })	
-            .on("click", function (d, i) {
-                if (d.children.length !== 0 && d.children[0].type === "branch") {
-                    console.log(d);
-                    g = d3.select("body").select("svg").append("g").attr("id", "overlap");
-                    // 添加毛玻璃
-                    g.append("rect")
-                        .attr("x", d.cx-20)
-                        .attr("y", d.cy-20)
-                        .attr("width", 40)
-                        .attr("height", 40)
-                        .attr("fill", "#fff")
-                        // .attr("opacity", 0.6)
-                        .on("click", function () {
-                            d3.selectAll("g#overlap").remove();
-                            d3.selectAll("g#links").remove();
-                            d3.selectAll("g#nodes").remove();
-                            d3.selectAll("g#texts").remove();
-                        });
-
-                    let nodes = [];
-                    let links = [];
-                    d.children.forEach(element => {
-                        element.id = element.facetName;
-                        nodes.push(element);
-                    });
-                    for (let n = 0; n < nodes.length - 1; n++) {
-                        links.push({
-                            "source": nodes[n].id,
-                            "target": nodes[n + 1].id,
-                            value: 10
-                        });
-                    }
+            });
+        console.log($scope.masks);
+        $scope.masks.forEach((element, i) => {
+            if (element === 1 && data[i].children.length < 6) {
+                d3.select(circles._groups[0][i]).remove();
+                let d = data[i];
+                let nodes = [];
+                let links = [];
+                d.children.forEach(element => {
+                    element.id = element.facetName;
+                    nodes.push(element);
+                });
+                for (let n = 0; n < nodes.length - 1; n++) {
                     links.push({
-                        "source": nodes[nodes.length - 1].id,
-                        "target": nodes[0].id,
+                        "source": nodes[n].id,
+                        "target": nodes[n + 1].id,
                         value: 10
                     });
-                    const simulation = forceSimulation(nodes, links, d.cx, d.cy).on("tick", ticked);
-                    const fcy = d.cy;
-                    const index = i;
-                    const link = d3.select("body").select("svg").append("g").attr("id", "links")
-                        .attr("stroke", "#999")
-                        .attr("stroke-opacity", 0.6)
-                        .selectAll("line")
-                        .data(links)
-                        .enter().append("line")
-                        .attr("stroke-width", d => Math.sqrt(d.value));
-
-                    const node = d3.select("body").select("svg").append("g").attr("id", "nodes")
-                        .attr("stroke", "#fff")
-                        .attr("stroke-width", 1.5)
-                        .selectAll("circle")
-                        .data(nodes)
-                        .enter().append("circle")
-                        .attr("r", 15)
-                        .attr("fill", $scope.color[i])
-                        .call(d3.drag()
-                            .on("start", dragstarted)
-                            .on("drag", dragged)
-                            .on("end", dragended));
-                        
-                    const secondTexts = d3.select("body").select("svg").append("g").attr("id", "texts")
-                        .selectAll("text")
-                        .data(nodes)
-                        .enter()
-                        .append("text")
-                        .attr("fill", $scope.color[index])
-                        .text(function(d){return d.facetName;});
-
-                    function ticked() {
-                        link
-                            .attr("x1", d => d.source.x)
-                            .attr("y1", d => d.source.y)
-                            .attr("x2", d => d.target.x)
-                            .attr("y2", d => d.target.y);
-
-                        node
-                            .attr("cx", d => d.x)
-                            .attr("cy", d => d.y);
-
-                        secondTexts
-                            .attr("x", d => d.x + 15)
-                            .attr("y", d => {
-                                if(d.y > fcy){
-                                    return d.y + 15;
-                                }else{
-                                    return d.y - 15;
-                                }
-                            });
-                    }
-
-                    function dragstarted(d) {
-                        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-                        d.fx = d.x;
-                        d.fy = d.y;
-                    }
-
-                    function dragged(d) {
-                        d.fx = d3.event.x;
-                        d.fy = d3.event.y;
-                    }
-
-                    function dragended(d) {
-                        if (!d3.event.active) simulation.alphaTarget(0);
-                        d.fx = null;
-                        d.fy = null;
-                    }
-
                 }
-            });
+                links.push({
+                    "source": nodes[nodes.length - 1].id,
+                    "target": nodes[0].id,
+                    value: 10
+                });
+                const simulation = forceSimulation(nodes, links, d.cx, d.cy).on("tick", ticked);
+                const fcy = d.cy;
+                const index = i;
 
+                const link = d3.select("body").select("svg").append("g").attr("id", "links")
+                    .attr("stroke", "#999")
+                    .attr("stroke-opacity", 0.6)
+                    .selectAll("line")
+                    .data(links)
+                    .enter().append("line")
+                    .attr("stroke-width", d => Math.sqrt(d.value));
+
+                const secondTexts = d3.select("body").select("svg").append("g").attr("id", "texts")
+                    .selectAll("text")
+                    .data(nodes)
+                    .enter()
+                    .append("text")
+                    .attr("fill", $scope.color[index])
+                    .text(function(d){return d.facetName;});
+
+                const node = d3.select("body").select("svg").append("g").attr("id", "nodes")
+                    .attr("stroke", "#fff")
+                    .attr("stroke-width", 1.5)
+                    .selectAll("circle")
+                    .data(nodes)
+                    .enter().append("circle")
+                    .attr("r", 15)
+                    .attr("fill", $scope.color[i])
+                    .call(d3.drag()
+                        .on("start", dragstarted)
+                        .on("drag", dragged)
+                        .on("end", dragended));
+
+                function ticked() {
+                    link
+                        .attr("x1", d => d.source.x)
+                        .attr("y1", d => d.source.y)
+                        .attr("x2", d => d.target.x)
+                        .attr("y2", d => d.target.y);
+
+                    node
+                        .attr("cx", d => d.x)
+                        .attr("cy", d => d.y);
+
+                    secondTexts
+                        .attr("x", d => d.x + 15)
+                        .attr("y", d => {
+                            if(d.y > fcy){
+                                return d.y + 15;
+                            }else{
+                                return d.y - 15;
+                            }
+                        });
+                }
+
+                function dragstarted(d) {
+                    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+                    d.fx = d.x;
+                    d.fy = d.y;
+                }
+
+                function dragged(d) {
+                    d.fx = d3.event.x;
+                    d.fy = d3.event.y;
+                }
+
+                function dragended(d) {
+                    if (!d3.event.active) simulation.alphaTarget(0);
+                    d.fx = null;
+                    d.fy = null;
+                }
+              }
+        })
         // 显示主题名
         var name = d3.select("body").select("svg").append("g")
             .append("text")
             .attr("x", $scope.canvasWidth / 2 - 50)
             .attr("y", $scope.canvasHeight - 20)
-            .text($scope.topic.topicName);
+            // .text($scope.topic.topicName);
+            .text("树（数据结构）");
     };
 });
 
