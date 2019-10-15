@@ -1,12 +1,18 @@
 {
   "compilerOptions": {
     "removeComments": true,
-    "sourceMap": true
+    "sourceMap": true,
   },
   "include": [
     "src/*"
   ],
   "exclude": [
     "node_modules"
+  ],
+  "lib": [
+    "es5",
+    "es6",
+    "dom",
+    "es2015.collection"
   ]
 }
