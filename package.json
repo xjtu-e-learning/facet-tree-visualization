@@ -11,10 +11,12 @@
     "angularjs-slider": "^6.6.1",
     "d3": "^5.7.0",
     "jest-cli": "^24.9.0",
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@types/jest": "^24.0.19",
+    "@types/lodash": "^4.14.144",
     "@typescript-eslint/eslint-plugin": "^2.3.1",
     "@typescript-eslint/parser": "^2.3.1",
     "eslint": "^6.4.0",

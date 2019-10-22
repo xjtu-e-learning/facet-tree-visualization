@@ -1,3 +1,18 @@
+import { isEmpty } from 'lodash';
+
+/**
+ * input: [a, b, c, d, e]
+ * output: [c, b, d, e, a]
+ * @param arr 
+ */
+export function camelSort(arr: Array<any>): Array<any> {
+    const result = [];
+    while (arr.length > 0) {
+        result.push(...arr.splice(Math.floor((arr.length) / 2), 1));
+    }
+    return result;
+}
+
 interface AssembleData {
     assembleId: number;
     assembleContent: string;
@@ -95,12 +110,46 @@ export function buildTree(data: TreeData, dom: HTMLObjectElement): Tree {
         treeData: [],
     }
 
+    // 如果传入数据为空
+    if (isEmpty(data) || isEmpty(dom)) return result;
+
     // viewport宽高
     let width: number = dom.offsetWidth;
     const height: number = dom.offsetHeight;
 
     // 一级分面数量
     const firstLayerNumber: number = data.childrenNumber;
+
+    /**
+     * 如果只有一个一级分面， 单独处理
+     * TODO: 二级分面显示
+     */
+    if (firstLayerNumber === 1) {
+        result.branches.push({
+            x: width / 2 - 8,
+            y: height * 0.618,
+            width: 16,
+            height: height * 0.382,
+            color: '#ffffff',
+            facetId: data.children[0].facetId,
+            facetName: data.children[0].facetName,
+        });
+        result.leaves.push({
+            cx: width / 2,
+            cy: height * 0.382,
+            r: 12,
+            color: '#ffffff',
+        });
+        result.foldBranches.push({
+            x: width / 2 - 8,
+            y: height * 0.618,
+            width: 16,
+            height: 0,
+            transform: '',
+        });
+        result.treeData = data.children;
+        return result;
+    }
 
     // 判断是否视窗过小，需要折叠分面
     const foldFlag = 0.8 * width < (14 * firstLayerNumber - 4) ? true : false;
@@ -199,16 +248,13 @@ export function buildTree(data: TreeData, dom: HTMLObjectElement): Tree {
     }
 
     // 一级分面宽度
-    const facetWidth = firstLayerTmpNumber === 1 
-        ? 22 
-        : (Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx) - 2 * r) / (1.4 * firstLayerTmpNumber - 0.4);
+    const facetWidth = (Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx) - 2 * r) / (1.4 * firstLayerTmpNumber - 0.4);
     const facetInterval = facetWidth * 0.4;
     // 最左横坐标
-    const xInit = firstLayerTmpNumber === 1 
-        ? width / 2 - facetWidth / 2 
-        : (result.leaves[firstLayerTmpNumber - 1].cx < result.leaves[firstLayerTmpNumber - 2].cx 
+    const xInit = (result.leaves[firstLayerTmpNumber - 1].cx < result.leaves[firstLayerTmpNumber - 2].cx 
             ? result.leaves[firstLayerTmpNumber - 1].cx
             : result.leaves[firstLayerTmpNumber - 2].cx);
+
     firstLayerTmp.forEach((facet, index) => {
         const branch: Branch = {
             x: xInit + index * 1.4 * facetWidth,
@@ -223,30 +269,12 @@ export function buildTree(data: TreeData, dom: HTMLObjectElement): Tree {
     });
 
     result.branches = camelSort(result.branches);
-
-    // TODO: 只有一个一级分面的单独计算
-    if (firstLayerTmpNumber === 1) {
-        result.branches[0].y = height * 0.618;
-        result.branches[0].height = height * 0.382;
-    } else {
-        result.branches[firstLayerTmpNumber - 1].y = height * 0.618;
-        result.branches[firstLayerTmpNumber - 1].height = height * 0.382;
-        result.branches[firstLayerTmpNumber - 2].y = height * 0.618;
-        result.branches[firstLayerTmpNumber - 2].height = height * 0.382;
-    }
+    
+    result.branches[firstLayerTmpNumber - 1].y = height * 0.618;
+    result.branches[firstLayerTmpNumber - 1].height = height * 0.382;
+    result.branches[firstLayerTmpNumber - 2].y = height * 0.618;
+    result.branches[firstLayerTmpNumber - 2].height = height * 0.382;
     
     return result;
 }
 
-/**
- * input: [a, b, c, d, e]
- * output: [c, b, d, e, a]
- * @param arr 
- */
-export function camelSort(arr: Array<any>): Array<any> {
-    const result = [];
-    while (arr.length > 0) {
-        result.push(...arr.splice(Math.floor((arr.length) / 2), 1));
-    }
-    return result;
-}
