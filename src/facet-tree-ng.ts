@@ -234,7 +234,7 @@ export function buildTree(data: TreeData, dom: HTMLObjectElement): Tree {
         const leaf1: Leaf = {
             cx: R * Math.sin(initAngle) + width / 2,
             cy: topHeight - R * Math.cos(initAngle),
-            r: r,
+            r: r / 2,
             color: '#ffffff',
         };
         const leaf2 = {...leaf1};
@@ -254,7 +254,8 @@ export function buildTree(data: TreeData, dom: HTMLObjectElement): Tree {
     const xInit = (result.leaves[firstLayerTmpNumber - 1].cx < result.leaves[firstLayerTmpNumber - 2].cx 
             ? result.leaves[firstLayerTmpNumber - 1].cx
             : result.leaves[firstLayerTmpNumber - 2].cx);
-
+    
+    // 初始化一级分面对应的branch
     firstLayerTmp.forEach((facet, index) => {
         const branch: Branch = {
             x: xInit + index * 1.4 * facetWidth,
@@ -268,12 +269,38 @@ export function buildTree(data: TreeData, dom: HTMLObjectElement): Tree {
         result.branches.push(branch);
     });
 
+    // 将初始化的branch从中间到两边重新排序
     result.branches = camelSort(result.branches);
-    
-    result.branches[firstLayerTmpNumber - 1].y = height * 0.618;
-    result.branches[firstLayerTmpNumber - 1].height = height * 0.382;
-    result.branches[firstLayerTmpNumber - 2].y = height * 0.618;
-    result.branches[firstLayerTmpNumber - 2].height = height * 0.382;
+
+    for (let i = 0; i < firstLayerTmpNumber; i++) {
+        result.branches[i].y = result.leaves[i].cy - Math.sqrt(Math.pow(r, 2) - Math.pow(result.leaves[i].cx - result.branches[i].x, 2));
+        result.branches[i].height = height - result.branches[i].y;
+    }
+
+    /**
+     * 生成foldBranches
+     */
+    for (let i = 0; i < firstLayerNumber; i++) {
+        const foldBranch: FoldBranch = {
+            x: result.branches[i].x,
+            y: result.branches[i].y,
+            width: result.branches[i].width,
+            height: r / 4,
+            transform: '',
+        }
+
+        const middleX = foldBranch.x + width / 2;
+        const middleY = foldBranch.y;
+
+        const angle = Math.atan(Math.abs((result.leaves[i].cy - middleY)/(result.leaves[i].cx - middleX))) / Math.PI * 180;
+        if (foldBranch.x < width / 2) {
+            foldBranch.transform = 'rotate(' + (-angle-90) + ' ' + (foldBranch.x + width) + ',' + foldBranch.y + ')';
+        } else {
+            foldBranch.transform = 'rotate(' + (90+angle) + ' ' + foldBranch.x + ',' + foldBranch.y + ')';
+        }
+
+        result.foldBranches.push(foldBranch);
+    }
     
     return result;
 }
