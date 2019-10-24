@@ -1,4 +1,11 @@
 import { isEmpty } from 'lodash';
+import { presetPalettes } from '@ant-design/colors';
+
+// 调色板
+const palettes = [];
+for (const key in presetPalettes) {
+    palettes.push(presetPalettes[key]);
+}
 
 /**
  * input: [a, b, c, d, e]
@@ -93,6 +100,7 @@ interface FoldBranch {
     width: number;
     height: number;
     transform: string;
+    color: string;
 }
 
 interface Tree {
@@ -111,11 +119,11 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     }
 
     // 如果传入数据为空
-    if (isEmpty(data) || isEmpty(dom)) return result;
+    if (isEmpty(data) || !dom) return result;
 
     // viewport宽高
-    let width: number = dom.offsetWidth;
-    const height: number = dom.offsetHeight;
+    let width: number = dom.clientWidth;
+    const height: number = dom.clientHeight;
 
     // 一级分面数量
     const firstLayerNumber: number = data.childrenNumber;
@@ -130,7 +138,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             y: height * 0.618,
             width: 16,
             height: height * 0.382,
-            color: '#ffffff',
+            color: palettes[0][6],
             facetId: data.children[0].facetId,
             facetName: data.children[0].facetName,
         });
@@ -138,7 +146,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             cx: width / 2,
             cy: height * 0.382,
             r: 12,
-            color: '#ffffff',
+            color: palettes[0][6],
         });
         result.foldBranches.push({
             x: width / 2 - 8,
@@ -146,6 +154,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             width: 16,
             height: 0,
             transform: '',
+            color: '',
         });
         result.treeData = data.children;
         return result;
@@ -220,6 +229,8 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     // sort fold facets
     firstLayerTmp.sort((a, b) => calcWeight(b) - calcWeight(a));
 
+    result.treeData = firstLayerTmp;
+
     const firstLayerTmpNumber = firstLayerTmp.length;
     const odd = firstLayerTmpNumber % 2 === 1 ? true : false;
     const topHeight = height * 0.618;
@@ -246,14 +257,17 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     if (odd) {
         result.leaves.unshift();
     }
+    for (let i = 0; i < firstLayerTmpNumber; i++) {
+        result.leaves[i].color = palettes[i][6];
+    }
 
     // 一级分面宽度
-    const facetWidth = (Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx) - 2 * r) / (1.4 * firstLayerTmpNumber - 0.4);
+    const facetWidth = (Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx) - r) / (1.4 * firstLayerTmpNumber - 0.4);
     const facetInterval = facetWidth * 0.4;
     // 最左横坐标
     const xInit = (result.leaves[firstLayerTmpNumber - 1].cx < result.leaves[firstLayerTmpNumber - 2].cx 
-            ? result.leaves[firstLayerTmpNumber - 1].cx
-            : result.leaves[firstLayerTmpNumber - 2].cx);
+            ? result.leaves[firstLayerTmpNumber - 1].cx + r / 2
+            : result.leaves[firstLayerTmpNumber - 2].cx + r / 2);
     
     // 初始化一级分面对应的branch
     firstLayerTmp.forEach((facet, index) => {
@@ -273,8 +287,22 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     result.branches = camelSort(result.branches);
 
     for (let i = 0; i < firstLayerTmpNumber; i++) {
-        result.branches[i].y = result.leaves[i].cy - Math.sqrt(Math.pow(r, 2) - Math.pow(result.leaves[i].cx - result.branches[i].x, 2));
+        if (result.branches[i].x <= width / 2) {
+            if (Math.abs(result.leaves[i].cx - result.branches[i].x) > r) {
+                result.branches[i].y = result.leaves[i].cy + r;
+            } else {
+                result.branches[i].y = result.leaves[i].cy + Math.sqrt(Math.pow(r, 2) - Math.pow(result.leaves[i].cx - result.branches[i].x, 2));
+            }
+        } else {
+            if (Math.abs(result.leaves[i].cx - result.branches[i].x - result.branches[i].width) > r) {
+                result.branches[i].y = result.leaves[i].cy + r;
+            } else {
+                result.branches[i].y = result.leaves[i].cy + Math.sqrt(Math.pow(r, 2) - Math.pow(result.leaves[i].cx - result.branches[i].x - result.branches[i].width, 2));
+            }
+        }
+        
         result.branches[i].height = height - result.branches[i].y;
+        result.branches[i].color = palettes[i][6];
     }
 
     /**
@@ -287,6 +315,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             width: result.branches[i].width,
             height: r / 4,
             transform: '',
+            color: palettes[i][6],
         }
 
         const middleX = foldBranch.x + width / 2;
@@ -301,7 +330,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
 
         result.foldBranches.push(foldBranch);
     }
-    
+
     return result;
 }
 

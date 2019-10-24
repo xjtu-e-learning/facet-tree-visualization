@@ -6,6 +6,7 @@
   "author": "wkw307",
   "license": "MIT",
   "dependencies": {
+    "@ant-design/colors": "^3.2.2",
     "@types/d3": "^5.7.2",
     "angular": "1.7.5",
     "angularjs-slider": "^6.6.1",
@@ -30,8 +31,8 @@
   "scripts": {
     "test": "jest",
     "build": "rm -rf ./dst && tsc",
-    "webpack" : "webpack",
-    "dev" : "rm -rf dist && npm run webpack -- --mode development",
-    "prod" : "rm -rf dist && npm run webpack -- --mode production"
+    "webpack": "webpack",
+    "dev": "rm -rf dist && npm run webpack -- --mode development",
+    "prod": "rm -rf dist && npm run webpack -- --mode production"
   }
 }
