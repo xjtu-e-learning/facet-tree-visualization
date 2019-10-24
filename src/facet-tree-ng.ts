@@ -102,7 +102,7 @@ interface Tree {
     treeData: { [p: string]: any }[];
 }
 
-export function buildTree(data: TreeData, dom: HTMLObjectElement): Tree {
+export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     const result: Tree = {
         branches: [],
         leaves: [],

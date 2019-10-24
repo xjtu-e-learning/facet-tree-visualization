@@ -8,36 +8,9 @@
     <link rel="stylesheet" href="./node_modules/angularjs-slider/dist/rzslider.css" type="text/css">
 </head>
 <body>
-    <div ng-app="myApp" ng-controller="myCtrl" style="display: inline-flex">
-        <div style="display: inline" id="mysvg"><svg width="600" height="800"></svg></div>
-        <div style="display: inline">
-            <!-- <div>一级分面宽度:<rzslider rz-slider-model="firstLayerWidth" rz-slider-options="firstLayerWidthOptions" style="width: 300px">
-            </rzslider></div>
-            <div>一级分面间隔:<rzslider rz-slider-model="firstLayerInterval" rz-slider-options="firstLayerIntervalOptions" style="width: 300px">
-                </rzslider></div>
-            <div>一级分面弯曲的初始角度:<rzslider rz-slider-model="initialAngle" rz-slider-options="initialAngleOptions" style="width: 300px">
-                </rzslider></div>
-            <div>一级分面之间角度差:<rzslider rz-slider-model="deltaAngle" rz-slider-options="deltaAngleOptions" style="width: 300px">
-                </rzslider></div> -->
-            <!-- <div>
-                选择学科：
-                <select class="btn btn-sm btn-primary" ng-model="subject" ng-options="subject.subjectName for subject in subjects">
-                </select>
-                选择课程：
-                <select class="btn btn-sm btn-primary" ng-model="domain" ng-options="domain.domainName for domain in subject.domains" ng-change="getTopicsByDomainName()">
-                </select>
-                选择主题：
-                <select class="btn btn-sm btn-primary" ng-model="topic" ng-options="topic.topicName for topic in topics" >
-                </select>
-            </div>
-            <button ng-click="getData()">更新</button> -->
-        </div>
-    </div>
-    <script type="text/javascript" src="./node_modules/angular/angular.js"></script>
-    <script type="text/javascript" src="./node_modules/angularjs-slider/dist/rzslider.js"></script>
-    <script type="text/javascript" src="./node_modules/d3/dist/d3.js"></script>
-    <script type="text/javascript" src="./node_modules/jquery/dist/jquery.js"></script>
-    <script type="text/javascript" src="./index.js"></script>
+    <div style="display: inline"><svg id="mysvg" width="600" height="800"></svg></div>
+    <script>var exports = {"__esModule": true};</script>
+    <script type="text/javascript" src="./dist/bundle.js"></script>
 </body>
 
 </html>

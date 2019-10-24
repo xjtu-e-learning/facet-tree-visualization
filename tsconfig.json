@@ -1,7 +1,18 @@
 {
   "compilerOptions": {
     "removeComments": true,
+    "module": "commonjs",
+    "target": "es5",
+    "types": ["lodash", "d3", "jest"],
     "sourceMap": true,
+    "rootDir": "src",
+    "outDir": "dst",
+    "lib": [
+      "es5",
+      "es6",
+      "dom",
+      "es2015.collection"
+    ]
   },
   "include": [
     "src/*"
@@ -9,10 +20,4 @@
   "exclude": [
     "node_modules"
   ],
-  "lib": [
-    "es5",
-    "es6",
-    "dom",
-    "es2015.collection"
-  ]
 }
