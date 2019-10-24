@@ -20,4 +20,9 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
+  watch: true,
+  watchOptions: {
+    aggregateTimeout: 600,
+    ignored: /node_modules/
+  }
 };
