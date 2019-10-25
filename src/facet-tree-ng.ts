@@ -184,7 +184,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     // 如果需要折叠
     if (foldFlag) {
         // 可容纳最多一级分面数
-        const maxFirstLayerNumber = Math.floor((width * 0.8 + 4) / 14);
+        const maxFirstLayerNumber = Math.floor((width * 0.6 + 4) / 14);
         // 权重大于100的分面（约为有二级分面的一级分面）
         const firstLayerNumberWithSecondLayer = firstLayerMap.filter(x => x.value > 100).length;
         // 剩余可折叠分面
@@ -224,7 +224,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         }
     }
 
-    if (dragflag) width = (14 * firstLayerNumber - 4) / 0.8;
+    if (dragflag) width = (14 * firstLayerNumber - 4) / 0.6;
 
     // sort fold facets
     firstLayerTmp.sort((a, b) => calcWeight(b) - calcWeight(a));
@@ -240,11 +240,15 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     const r2 = odd ? topHeight / (1 + 1/Math.sin(angle)) : topHeight / (1 + 1/Math.tan(angle));
     const r = r1 < r2 ? r1 : r2;
     const R = r / Math.sin(angle);
+
+    const deltaInterval = R + r < topHeight ? (topHeight - R - r) / firstLayerTmpNumber * 2 : 0;
+    
     let initAngle = odd ? 0 : angle;
+    let tempIndex = Math.floor(firstLayerTmpNumber / 2);
     while (initAngle < Math.PI / 2) {
         const leaf1: Leaf = {
             cx: R * Math.sin(initAngle) + width / 2,
-            cy: topHeight - R * Math.cos(initAngle),
+            cy: topHeight - R * Math.cos(initAngle) - deltaInterval * tempIndex,
             r: r / 2,
             color: '#ffffff',
         };
@@ -253,6 +257,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         result.leaves.push(leaf1);
         result.leaves.push(leaf2);
         initAngle += angle * 2;
+        tempIndex--;
     }
     if (odd) {
         result.leaves.unshift();
@@ -262,12 +267,12 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     }
 
     // 一级分面宽度
-    const facetWidth = (Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx) - r) / (1.4 * firstLayerTmpNumber - 0.4);
+    const facetWidth = (Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx) - 4 * r) / (1.4 * firstLayerTmpNumber - 0.4);
     const facetInterval = facetWidth * 0.4;
     // 最左横坐标
     const xInit = (result.leaves[firstLayerTmpNumber - 1].cx < result.leaves[firstLayerTmpNumber - 2].cx 
-            ? result.leaves[firstLayerTmpNumber - 1].cx + r / 2
-            : result.leaves[firstLayerTmpNumber - 2].cx + r / 2);
+            ? result.leaves[firstLayerTmpNumber - 1].cx + r * 2
+            : result.leaves[firstLayerTmpNumber - 2].cx + r * 2);
     
     // 初始化一级分面对应的branch
     firstLayerTmp.forEach((facet, index) => {
@@ -287,17 +292,18 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     result.branches = camelSort(result.branches);
 
     for (let i = 0; i < firstLayerTmpNumber; i++) {
+        const space = 2 * r + r * (firstLayerTmpNumber - i) / 4;
         if (result.branches[i].x <= width / 2) {
-            if (Math.abs(result.leaves[i].cx - result.branches[i].x) > r) {
-                result.branches[i].y = result.leaves[i].cy + r;
+            if (Math.abs(result.leaves[i].cx - result.branches[i].x) > space) {
+                result.branches[i].y = result.leaves[i].cy + space;
             } else {
-                result.branches[i].y = result.leaves[i].cy + Math.sqrt(Math.pow(r, 2) - Math.pow(result.leaves[i].cx - result.branches[i].x, 2));
+                result.branches[i].y = result.leaves[i].cy + Math.sqrt(Math.pow(space, 2) - Math.pow(result.leaves[i].cx - result.branches[i].x, 2));
             }
         } else {
-            if (Math.abs(result.leaves[i].cx - result.branches[i].x - result.branches[i].width) > r) {
-                result.branches[i].y = result.leaves[i].cy + r;
+            if (Math.abs(result.leaves[i].cx - result.branches[i].x - result.branches[i].width) > space) {
+                result.branches[i].y = result.leaves[i].cy + space;
             } else {
-                result.branches[i].y = result.leaves[i].cy + Math.sqrt(Math.pow(r, 2) - Math.pow(result.leaves[i].cx - result.branches[i].x - result.branches[i].width, 2));
+                result.branches[i].y = result.leaves[i].cy + Math.sqrt(Math.pow(space, 2) - Math.pow(result.leaves[i].cx - result.branches[i].x - result.branches[i].width, 2));
             }
         }
         
@@ -308,27 +314,29 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     /**
      * 生成foldBranches
      */
+    tempIndex = firstLayerTmpNumber + 1;
     for (let i = 0; i < firstLayerNumber; i++) {
         const foldBranch: FoldBranch = {
-            x: result.branches[i].x,
+            x: result.branches[i].x < width / 2 ? result.branches[i].x + result.branches[i].width : result.branches[i].x - result.branches[i].width,
             y: result.branches[i].y,
             width: result.branches[i].width,
-            height: r / 4,
+            height: r + tempIndex * deltaInterval / 5,
             transform: '',
             color: palettes[i][6],
         }
 
-        const middleX = foldBranch.x + width / 2;
+        const middleX = result.branches[i].x + foldBranch.width / 2;
         const middleY = foldBranch.y;
 
         const angle = Math.atan(Math.abs((result.leaves[i].cy - middleY)/(result.leaves[i].cx - middleX))) / Math.PI * 180;
-        if (foldBranch.x < width / 2) {
-            foldBranch.transform = 'rotate(' + (-angle-90) + ' ' + (foldBranch.x + width) + ',' + foldBranch.y + ')';
+        if (result.branches[i].x < width / 2) {
+            foldBranch.transform = 'rotate(' + (angle+90) + ' ' + foldBranch.x + ',' + foldBranch.y + ')';
         } else {
-            foldBranch.transform = 'rotate(' + (90+angle) + ' ' + foldBranch.x + ',' + foldBranch.y + ')';
+            foldBranch.transform = 'rotate(' + (-angle-90) + ' ' + result.branches[i].x + ',' + foldBranch.y + ')';
         }
 
         result.foldBranches.push(foldBranch);
+        tempIndex--;
     }
 
     return result;
