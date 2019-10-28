@@ -158,7 +158,6 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
 
     /**
      * 如果只有一个一级分面， 单独处理
-     * TODO: 二级分面显示
      */
     if (firstLayerNumber === 1) {
         result.branches.push({
@@ -185,6 +184,16 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             color: '',
         });
         result.treeData = data.children;
+
+        if (data.children[0].containChildrenFacet) {
+            result.facetChart.push(
+                calcFacetChart(data.children[0],
+                result.leaves[0].cx,
+                result.leaves[0].cy,
+                result.leaves[0].color,
+                result.leaves[0].r)
+            );
+        }
         return result;
     }
 
