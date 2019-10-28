@@ -33,7 +33,7 @@ interface AssembleData {
     url: string;
 }
 
-interface FacetData {
+export interface FacetData {
     facetId: number;
     facetName: string;
     // 1: 一级分面 2: 二级分面
