@@ -2,6 +2,7 @@ import { buildTree } from './facet-tree-ng';
 import { data } from './data';
 import * as d3 from 'd3';
 import { color } from 'd3';
+import { drawFacetForceLayout } from './facet-force-layout';
 
 const svg = document.getElementById('mysvg');
 const treeData = buildTree(data, svg);
@@ -44,20 +45,20 @@ canvas.append('g')
     })
     .attr('fill', d => d.color);
 
-const pie = d3.pie().value(1);
-const arc = d3.arc()
-.innerRadius(0)
-.outerRadius(20);
-
-treeData.facetPieChart.forEach(element => {
-    canvas.append('g')
-    .attr('transform', element.transform)
-    .selectAll('path')
-    .data(pie(element.children as any))
-    .enter()
-    .append('path')
-    .attr('d', arc as unknown as string)
-    .attr('fill', element.color)
-    .attr("stroke", "white")
-    .attr("stroke-width", element.r / 10)
+treeData.facetChart.forEach(element => {
+    // 饼图
+    // canvas.append('g')
+    // .attr('transform', element.transform)
+    // .selectAll('path')
+    // .data(d3.pie().value(1)(element.children as any))
+    // .enter()
+    // .append('path')
+    // .attr('d', d3.arc()
+    // .innerRadius(0)
+    // .outerRadius(20) as unknown as string)
+    // .attr('fill', element.color)
+    // .attr("stroke", "white")
+    // .attr("stroke-width", element.r / 10)
+    // 力导向图
+    drawFacetForceLayout(element, svg);
 });

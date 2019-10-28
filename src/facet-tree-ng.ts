@@ -109,23 +109,27 @@ interface Tree {
     branches: Branch[];
     leaves: Leaf[];
     foldBranches: FoldBranch[];
-    facetPieChart: FacetPieChartData[];
-    treeData: { [p: string]: any }[];
+    facetChart: FacetChartData[];
+    treeData: FacetData[];
 }
 
-interface FacetPieChartData extends FacetData {
+export interface FacetChartData extends FacetData {
     transform: string;
     color: string;
     r: number;
+    cx: number;
+    cy: number;
 }
 
-function calcFacetPieChart(data: FacetData, cx: number, cy: number, color: string, r: number): FacetPieChartData {
+function calcFacetChart(data: FacetData, cx: number, cy: number, color: string, r: number): FacetChartData {
     console.log(data);
     const result = Object.assign(
         {},
         data,
         {
             transform: `translate(${cx},${cy})`,
+            cx,
+            cy,
             r,
             color,
         }
@@ -139,7 +143,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         leaves: [],
         foldBranches: [],
         treeData: [],
-        facetPieChart: [],
+        facetChart: [],
     }
 
     // 如果传入数据为空
@@ -368,8 +372,8 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
      */
     for (let i = 0; i < firstLayerTmpNumber; i++) {
         if (firstLayerTmp[i].containChildrenFacet) {
-            result.facetPieChart.push(
-                calcFacetPieChart(firstLayerTmp[i],
+            result.facetChart.push(
+                calcFacetChart(firstLayerTmp[i],
                 result.leaves[i].cx,
                 result.leaves[i].cy,
                 result.leaves[i].color,
