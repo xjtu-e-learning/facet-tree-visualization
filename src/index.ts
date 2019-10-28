@@ -62,3 +62,24 @@ treeData.facetChart.forEach(element => {
     // 力导向图
     drawFacetForceLayout(element, svg);
 });
+
+const texts = canvas.append('g')
+    .selectAll('text')
+    .data(treeData.texts)
+    .enter()
+    .append('text')
+    .attr('font-size', d => d.fontSize + 'px')
+    .attr('x', d => d.x)
+    .attr('y', d => d.y)
+    .attr('fill', '#fff');
+
+treeData.texts.forEach((element, index) => {
+    d3.select((texts as any)._groups[0][index])
+        .selectAll('tspan')
+        .data(element.text.split(''))
+        .enter()
+        .append('tspan')
+        .attr('x', element.x)
+        .attr('dy', '1.2em')
+        .text(d => d);
+});

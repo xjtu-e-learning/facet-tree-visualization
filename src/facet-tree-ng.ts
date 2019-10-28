@@ -79,7 +79,7 @@ function calcWeight(facetData: FacetData): number {
 const minFacetFontSize = 8;
 const maxFacetFontSize = 20;
 
-interface Branch { 
+interface Branch {
     x: number;
     y: number;
     width: number;
@@ -105,12 +105,20 @@ interface FoldBranch {
     color: string;
 }
 
+interface TextData {
+    text: string;
+    x: number;
+    y: number;
+    fontSize: number;
+}
+
 interface Tree {
     branches: Branch[];
     leaves: Leaf[];
     foldBranches: FoldBranch[];
     facetChart: FacetChartData[];
     treeData: FacetData[];
+    texts: TextData[];
 }
 
 export interface FacetChartData extends FacetData {
@@ -144,6 +152,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         foldBranches: [],
         treeData: [],
         facetChart: [],
+        texts: [],
     }
 
     // 如果传入数据为空
@@ -188,10 +197,10 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         if (data.children[0].containChildrenFacet) {
             result.facetChart.push(
                 calcFacetChart(data.children[0],
-                result.leaves[0].cx,
-                result.leaves[0].cy,
-                result.leaves[0].color,
-                result.leaves[0].r)
+                    result.leaves[0].cx,
+                    result.leaves[0].cy,
+                    result.leaves[0].color,
+                    result.leaves[0].r)
             );
         }
         return result;
@@ -272,14 +281,14 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     const odd = firstLayerTmpNumber % 2 === 1 ? true : false;
     const topHeight = height * 0.618;
     // calc leaves position
-    const angle = Math.PI / ( firstLayerTmpNumber * 2 );
-    const r1 = width * Math.tan(angle) / ( 2 * (1 + Math.tan(angle)));
-    const r2 = odd ? topHeight / (1 + 1/Math.sin(angle)) : topHeight / (1 + 1/Math.tan(angle));
+    const angle = Math.PI / (firstLayerTmpNumber * 2);
+    const r1 = width * Math.tan(angle) / (2 * (1 + Math.tan(angle)));
+    const r2 = odd ? topHeight / (1 + 1 / Math.sin(angle)) : topHeight / (1 + 1 / Math.tan(angle));
     const r = r1 < r2 ? r1 : r2;
     const R = r / Math.sin(angle);
 
     const deltaInterval = R + r < topHeight ? (topHeight - R - r) / firstLayerTmpNumber * 2 : 0;
-    
+
     let initAngle = odd ? 0 : angle;
     let tempIndex = Math.floor(firstLayerTmpNumber / 2);
     while (initAngle < Math.PI / 2) {
@@ -289,7 +298,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             r: r / 2,
             color: '#ffffff',
         };
-        const leaf2 = {...leaf1};
+        const leaf2 = { ...leaf1 };
         leaf2.cx = width / 2 - R * Math.sin(initAngle);
         result.leaves.push(leaf1);
         result.leaves.push(leaf2);
@@ -307,10 +316,10 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     const facetWidth = (Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx) - 4 * r) / (1.4 * firstLayerTmpNumber - 0.4);
     const facetInterval = facetWidth * 0.4;
     // 最左横坐标
-    const xInit = (result.leaves[firstLayerTmpNumber - 1].cx < result.leaves[firstLayerTmpNumber - 2].cx 
-            ? result.leaves[firstLayerTmpNumber - 1].cx + r * 2
-            : result.leaves[firstLayerTmpNumber - 2].cx + r * 2);
-    
+    const xInit = (result.leaves[firstLayerTmpNumber - 1].cx < result.leaves[firstLayerTmpNumber - 2].cx
+        ? result.leaves[firstLayerTmpNumber - 1].cx + r * 2
+        : result.leaves[firstLayerTmpNumber - 2].cx + r * 2);
+
     // 初始化一级分面对应的branch
     firstLayerTmp.forEach((facet, index) => {
         const branch: Branch = {
@@ -343,7 +352,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
                 result.branches[i].y = result.leaves[i].cy + Math.sqrt(Math.pow(space, 2) - Math.pow(result.leaves[i].cx - result.branches[i].x - result.branches[i].width, 2));
             }
         }
-        
+
         result.branches[i].height = height - result.branches[i].y;
         result.branches[i].color = palettes[i][ColorNo];
     }
@@ -365,30 +374,38 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         const middleX = result.branches[i].x + foldBranch.width / 2;
         const middleY = foldBranch.y;
 
-        const angle = Math.atan(Math.abs((result.leaves[i].cy - middleY)/(result.leaves[i].cx - middleX))) / Math.PI * 180;
+        const angle = Math.atan(Math.abs((result.leaves[i].cy - middleY) / (result.leaves[i].cx - middleX))) / Math.PI * 180;
         if (result.branches[i].x < width / 2) {
-            foldBranch.transform = 'rotate(' + (angle+90) + ' ' + foldBranch.x + ',' + foldBranch.y + ')';
+            foldBranch.transform = 'rotate(' + (angle + 90) + ' ' + foldBranch.x + ',' + foldBranch.y + ')';
         } else {
-            foldBranch.transform = 'rotate(' + (-angle-90) + ' ' + result.branches[i].x + ',' + foldBranch.y + ')';
+            foldBranch.transform = 'rotate(' + (-angle - 90) + ' ' + result.branches[i].x + ',' + foldBranch.y + ')';
         }
 
         result.foldBranches.push(foldBranch);
         tempIndex--;
     }
 
-    /**
-     * 生成facetPieChart
-     */
+    const fontSize = facetWidth - 4 > maxFacetFontSize ? maxFacetFontSize : facetWidth - 4;
+
     for (let i = 0; i < firstLayerTmpNumber; i++) {
+        // 生成facetChart
         if (firstLayerTmp[i].containChildrenFacet) {
             result.facetChart.push(
                 calcFacetChart(firstLayerTmp[i],
-                result.leaves[i].cx,
-                result.leaves[i].cy,
-                result.leaves[i].color,
-                result.leaves[i].r)
+                    result.leaves[i].cx,
+                    result.leaves[i].cy,
+                    result.leaves[i].color,
+                    result.leaves[i].r)
             );
         }
+
+        // 生成text
+        result.texts.push({
+            x: result.branches[i].x + facetWidth / 2 - fontSize / 2,
+            y: result.branches[i].y + 8,
+            text: result.branches[i].facetName,
+            fontSize
+        });
     }
 
     return result;
