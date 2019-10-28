@@ -7,6 +7,8 @@ for (const key in presetPalettes) {
     palettes.push(presetPalettes[key]);
 }
 
+const ColorNo = 7;
+
 /**
  * input: [a, b, c, d, e]
  * output: [c, b, d, e, a]
@@ -107,7 +109,28 @@ interface Tree {
     branches: Branch[];
     leaves: Leaf[];
     foldBranches: FoldBranch[];
+    facetPieChart: FacetPieChartData[];
     treeData: { [p: string]: any }[];
+}
+
+interface FacetPieChartData extends FacetData {
+    transform: string;
+    color: string;
+    r: number;
+}
+
+function calcFacetPieChart(data: FacetData, cx: number, cy: number, color: string, r: number): FacetPieChartData {
+    console.log(data);
+    const result = Object.assign(
+        {},
+        data,
+        {
+            transform: `translate(${cx},${cy})`,
+            r,
+            color,
+        }
+    );
+    return result;
 }
 
 export function buildTree(data: TreeData, dom: HTMLElement): Tree {
@@ -116,6 +139,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         leaves: [],
         foldBranches: [],
         treeData: [],
+        facetPieChart: [],
     }
 
     // 如果传入数据为空
@@ -138,7 +162,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             y: height * 0.618,
             width: 16,
             height: height * 0.382,
-            color: palettes[0][6],
+            color: palettes[0][ColorNo],
             facetId: data.children[0].facetId,
             facetName: data.children[0].facetName,
         });
@@ -146,7 +170,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             cx: width / 2,
             cy: height * 0.382,
             r: 12,
-            color: palettes[0][6],
+            color: palettes[0][ColorNo],
         });
         result.foldBranches.push({
             x: width / 2 - 8,
@@ -263,7 +287,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         result.leaves.unshift();
     }
     for (let i = 0; i < firstLayerTmpNumber; i++) {
-        result.leaves[i].color = palettes[i][6];
+        result.leaves[i].color = palettes[i][ColorNo];
     }
 
     // 一级分面宽度
@@ -308,7 +332,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         }
         
         result.branches[i].height = height - result.branches[i].y;
-        result.branches[i].color = palettes[i][6];
+        result.branches[i].color = palettes[i][ColorNo];
     }
 
     /**
@@ -322,7 +346,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             width: result.branches[i].width,
             height: r + tempIndex * deltaInterval / 5,
             transform: '',
-            color: palettes[i][6],
+            color: palettes[i][ColorNo],
         }
 
         const middleX = result.branches[i].x + foldBranch.width / 2;
@@ -337,6 +361,21 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
 
         result.foldBranches.push(foldBranch);
         tempIndex--;
+    }
+
+    /**
+     * 生成facetPieChart
+     */
+    for (let i = 0; i < firstLayerTmpNumber; i++) {
+        if (firstLayerTmp[i].containChildrenFacet) {
+            result.facetPieChart.push(
+                calcFacetPieChart(firstLayerTmp[i],
+                result.leaves[i].cx,
+                result.leaves[i].cy,
+                result.leaves[i].color,
+                result.leaves[i].r)
+            );
+        }
     }
 
     return result;
