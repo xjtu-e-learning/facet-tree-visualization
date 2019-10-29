@@ -1,13 +1,94 @@
+import * as d3 from 'd3';
+import axios from 'axios';
+
+
 import { buildTree, FacetData } from './facet-tree-ng';
 import { data } from './data';
-import * as d3 from 'd3';
-import { color } from 'd3';
+import { drawFacetPieChart } from './facet-pie-chart';
 import { drawFacetForceLayout } from './facet-force-layout';
 
 const svg = document.getElementById('mysvg');
 const treeData = buildTree(data, svg);
 console.log('data', data);
 console.log('treeData:', treeData);
+
+let currentFacetId = -1;
+let expandedFacetId = -2;
+
+async function clickFacet(facetId: number, facetName: string, parentFacetId = -2) {
+    // return when facetId not change
+    if (currentFacetId === facetId) return;
+    
+    // save facetId
+    currentFacetId = facetId;
+
+    if (expandedFacetId !== -2 && expandedFacetId !== parentFacetId) {
+        // delete force layout
+        const expandedNodes = document.getElementsByClassName(expandedFacetId.toString());
+        while (expandedNodes.length) {
+            expandedNodes[0].parentNode.removeChild(expandedNodes[0]);
+        }
+        // draw pie chart
+        drawFacetPieChart(treeData.facetChart.filter(x => x.facetId === expandedFacetId)[0], svg, treeData, clickFacet);
+        // reset expandedFacetId
+        expandedFacetId = -2;
+    }
+
+    if (parentFacetId !== -2 && expandedFacetId !== parentFacetId) {
+        expandedFacetId = parentFacetId;
+        // delete pie chart
+        const expandedNodes = document.getElementsByClassName(expandedFacetId.toString());
+        while (expandedNodes.length) {
+            expandedNodes[0].parentNode.removeChild(expandedNodes[0]);
+        }
+        // draw force layout
+        drawFacetForceLayout(treeData.facetChart.filter(x => x.facetId === expandedFacetId)[0], svg, clickFacet);
+    }
+
+    // empty list
+    const list = document.getElementById('list');
+    const children = list.childNodes;
+    for (let i = 0; i < children.length; i++) {
+        list.removeChild(children[i]);
+    }
+
+    const ul = document.createElement('ul');
+    let assembleNumber = 0;
+
+    try {
+        const res = await axios.get('http://yotta.xjtushilei.com:8083/assemble/getAssemblesByFacetId', {
+            params: {
+                facetId: facetId,
+            },
+        });
+        
+        if ((res as any).data.code === 200) {
+            const assembleList = res.data.data;
+            (assembleList as any).forEach(element => {
+                const li = document.createElement('li');
+                li.className = 'assemble';
+                if (element.type === 'video') {
+                    const regex = new RegExp('https://.*mp4');
+                    li.innerHTML = `<video src='${regex.exec(element.assembleContent as string)[0]}' controls height="280"></video>`
+                } else {
+                    li.innerHTML = element.assembleContent;
+                }
+                ul.appendChild(li);
+            });
+            assembleNumber = assembleList.length;
+        } else {
+            throw('api error');
+        }
+    } catch (e) {
+        console.log(e);
+    }
+    // whether current facet has changed or not
+    if (currentFacetId === facetId) {
+        list.appendChild(ul);
+        document.getElementById('facet').innerHTML = facetName;
+        document.getElementById('assembleNumber').innerHTML = assembleNumber.toString();
+    }
+}
 
 const canvas = d3.select('#mysvg');
 canvas.append('g')
@@ -43,51 +124,13 @@ canvas.append('g')
     .attr('r', (d, i) => {
         return treeData.treeData[i].containChildrenFacet ? 0 : d.r * 1.5;
     })
-    .attr('fill', d => d.color);
+    .attr('fill', d => d.color)
+    .style('cursor', 'pointer')
+    .on('click',(d, i) => clickFacet(treeData.branches[i].facetId, treeData.branches[i].facetName));
 
 treeData.facetChart.forEach(element => {
     // 饼图
-    canvas.append('g')
-        .attr('transform', element.transform)
-        .selectAll('path')
-        .data(d3.pie().value(1)(element.children as any))
-        .enter()
-        .append('path')
-        .attr('d', d3.arc()
-        .innerRadius(0)
-        .outerRadius(element.r) as unknown as string)
-        .attr('fill', element.color)
-        .attr("stroke", "white")
-        .attr("stroke-width", element.r / 10);
-    const num = element.childrenNumber;
-    const angle = Math.PI / num;
-    console.log(angle)
-    canvas.append('g')
-        .selectAll('text')
-        .data(element.children)
-        .enter()
-        .append('text')
-        .text(d => (d as FacetData).facetName)
-        .attr('x', (d, i) => {
-            if (angle === Math.PI) {
-                if (element.cx >= svg.clientWidth / 2) {
-                    return element.cx + element.r;
-                }
-                return element.cx - element.r - 12 * (d as FacetData).facetName.length;
-            }
-            if (Math.sin(angle * (2 * i + 1)) < 0) {
-                return element.cx + element.r * Math.sin(angle * (2 * i + 1)) - 12 * (d as FacetData).facetName.length - 12;
-            } 
-            return element.cx + element.r * Math.sin(angle * (2 * i + 1)) + 12;
-        })
-        .attr('y', (d, i) => {
-            if (angle === Math.PI) {
-                return element.cy - element.r;
-            }
-            return element.cy - element.r * Math.cos(angle * (2 * i + 1));
-        })
-        .attr('fill', '#000')
-        .attr('font-size', '12px');
+    drawFacetPieChart(element, svg, treeData, clickFacet);
     // 力导向图
     // drawFacetForceLayout(element, svg);
 });

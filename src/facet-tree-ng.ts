@@ -112,7 +112,7 @@ interface TextData {
     fontSize: number;
 }
 
-interface Tree {
+export interface Tree {
     branches: Branch[];
     leaves: Leaf[];
     foldBranches: FoldBranch[];

@@ -39,11 +39,11 @@ function fixna(x: number): number {
     return 0;
 }
 
-export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, fontSize = 12): void {
+export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, clickFacet: Function, fontSize = 12): void {
     const container = d3.select(dom).append('g');
     const { nodes, links } = calcFacetForceLayout(data);
 
-    const link = container.append('g')
+    const link = container.attr('class', data.facetId).append('g')
         .selectAll('line')
         .data(links)
         .enter()
@@ -57,7 +57,9 @@ export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, fon
         .enter()
         .append('circle')
         .attr('r', data.r / 2)
-        .attr('fill', data.color);
+        .attr('fill', data.color)
+        .style('cursor', 'pointer')
+        .on('click', d => clickFacet(d.facetId, data.facetName + '-' + d.facetName, data.facetId));
 
     const label = container.append('g')
         .selectAll('text')
