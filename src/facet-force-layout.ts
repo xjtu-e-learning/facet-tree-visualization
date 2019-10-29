@@ -39,10 +39,10 @@ function fixna(x: number): number {
     return 0;
 }
 
-export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement): void {
+export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, fontSize = 12): void {
     const container = d3.select(dom).append('g');
     const { nodes, links } = calcFacetForceLayout(data);
-    console.log(nodes, links)
+
     const link = container.append('g')
         .selectAll('line')
         .data(links)
@@ -58,6 +58,15 @@ export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement): vo
         .append('circle')
         .attr('r', data.r / 2)
         .attr('fill', data.color);
+
+    const label = container.append('g')
+        .selectAll('text')
+        .data(nodes)
+        .enter()
+        .append('text')
+        .attr('fill', '#000')
+        .attr('font-size', fontSize + 'px')
+        .text(d => d.facetName);
 
     function updateLink(link): void {
         link.attr("x1", function (d) { return fixna(d.source.x); })
@@ -75,6 +84,23 @@ export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement): vo
     function ticked(): void {
         node.call(updateNode);
         link.call(updateLink);
+        label
+            .attr('x', d => {
+                if (d.x === data.cx && d.x > dom.clientWidth / 2) {
+                    return d.x + data.r / 2;
+                }
+                if (d.x <= data.cx) {
+                    return d.x - d.facetName.length * fontSize - fontSize;
+                }
+                return d.x + data.r / 2;
+                
+            })
+            .attr('y', d => {
+                if (d.y >= data.cy) {
+                    return d.y - data.r / 2;
+                }
+                return d.y + data.r / 2;
+            });
     }
 
     const graphLayout = d3.forceSimulation(nodes)
