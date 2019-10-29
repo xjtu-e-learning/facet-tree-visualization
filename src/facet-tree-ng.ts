@@ -358,7 +358,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             }
         }
 
-        result.branches[i].height = height - result.branches[i].y;
+        result.branches[i].height = height - result.branches[i].y - 40;
         result.branches[i].color = palettes[i][ColorNo];
     }
 

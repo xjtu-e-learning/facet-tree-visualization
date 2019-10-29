@@ -112,3 +112,11 @@ treeData.texts.forEach((element, index) => {
         .attr('dy', '1.2em')
         .text(d => d);
 });
+
+canvas.append('g')
+    .append('text')
+    .attr('x', svg.clientWidth / 2 - 24 * data.topicName.length / 2)
+    .attr('y', svg.clientHeight - 10)
+    .text(data.topicName)
+    .attr('fill', '#000')
+    .attr('font-size', '24px');
