@@ -327,8 +327,8 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             y: 0,
             width: facetWidth,
             height: 0,
-            facetId: facet.facetId,
-            facetName: facet.facetName,
+            facetId: -1,
+            facetName: '',
             color: '',
         };
         result.branches.push(branch);
@@ -336,6 +336,11 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
 
     // 将初始化的branch从中间到两边重新排序
     result.branches = camelSort(result.branches);
+
+    for (let i = 0; i < firstLayerTmpNumber; i++) {
+        result.branches[i].facetName = firstLayerTmp[i].facetName;
+        result.branches[i].facetId = firstLayerTmp[i].facetId;
+    }
 
     for (let i = 0; i < firstLayerTmpNumber; i++) {
         const space = 2 * r + r * (firstLayerTmpNumber - i) / 4;
