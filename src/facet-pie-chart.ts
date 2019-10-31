@@ -1,7 +1,9 @@
-import { FacetChartData, FacetData, Tree } from './facet-tree-ng';
 import * as d3 from 'd3';
 
-export function drawFacetPieChart(data: FacetChartData, dom: HTMLElement, treeData: Tree, clickFacet: Function, fontSize = 12): void {
+import { FacetChartData, FacetData, Tree } from './facet-tree-ng';
+import { globalState } from './state';
+
+export function drawFacetPieChart(data: FacetChartData, dom: HTMLElement, fontSize = 12): void {
     const canvas = d3.select(dom);
     canvas.append('g')
         .attr('class', data.facetId)
@@ -18,10 +20,11 @@ export function drawFacetPieChart(data: FacetChartData, dom: HTMLElement, treeDa
         .attr("stroke-width", data.r / 10)
         .style('cursor', 'pointer')
         .on('click', d => {
-            let facetName = ' - ' + (d.data as any).facetName;
-            const firstFacetId = (d.data as any).parentFacetId;
-            facetName = ' ' + treeData.branches.filter(branch => branch.facetId === firstFacetId)[0].facetName + facetName;
-            clickFacet((d.data as any).facetId, facetName, data.facetId);
+            const [prev, curr] = globalState.getValue().expandedFacetId.split(',');
+            globalState.next({
+                currentFacetId: (d.data as any).facetId,
+                expandedFacetId: curr + ',' + data.facetId.toString(),
+            });
         });
     const num = data.childrenNumber;
     const angle = Math.PI / num;

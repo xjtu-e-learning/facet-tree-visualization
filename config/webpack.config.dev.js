@@ -2,7 +2,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'index.ts'),
+  entry: path.resolve(__dirname, '../src/index.ts'),
   devtool: 'inline-source-map',
   module: {
     rules: [
@@ -17,12 +17,9 @@ module.exports = {
     extensions: [ '.ts', '.tsx', '.js' ],
   },
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-  },
-  watch: true,
-  watchOptions: {
-    aggregateTimeout: 600,
-    ignored: /node_modules/
+    filename: 'facetTree.js',
+    path: path.resolve(__dirname, '../module'),
+    libraryTarget: "umd",
+    library: 'facetTree',
   }
 };

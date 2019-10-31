@@ -1,5 +1,7 @@
-import { FacetChartData } from './facet-tree-ng';
 import * as d3 from 'd3';
+
+import { FacetChartData } from './facet-tree-ng';
+import { globalState } from './state';
 
 function calcFacetForceLayout(data: FacetChartData): {nodes: any[]; links: any[]} {
     const nodes = [];
@@ -39,7 +41,7 @@ function fixna(x: number): number {
     return 0;
 }
 
-export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, clickFacet: Function, fontSize = 12): void {
+export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, fontSize = 12): void {
     const container = d3.select(dom).append('g');
     const { nodes, links } = calcFacetForceLayout(data);
 
@@ -59,7 +61,13 @@ export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, cli
         .attr('r', data.r / 2)
         .attr('fill', data.color)
         .style('cursor', 'pointer')
-        .on('click', d => clickFacet(d.facetId, data.facetName + '-' + d.facetName, data.facetId));
+        .on('click', d => {
+            const [prev, next] = globalState.getValue().expandedFacetId.split(',');
+            globalState.next({
+                currentFacetId: d.facetId,
+                expandedFacetId: next + ',' + data.facetId.toString(),
+            });
+        });
 
     const label = container.append('g')
         .selectAll('text')

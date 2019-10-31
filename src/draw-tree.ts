@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { map, distinctUntilChanged, debounce, filter } from 'rxjs/operators';
+import { map, distinctUntilChanged, debounce, filter, skip } from 'rxjs/operators';
 import { interval } from 'rxjs';
 
 import { buildTree } from './facet-tree-ng';
@@ -7,12 +7,13 @@ import { drawFacetPieChart } from './facet-pie-chart';
 import { drawFacetForceLayout } from './facet-force-layout';
 import { globalState } from './state';
 
-function drawTree(svg, data, clickFacet): void {
+export function drawTree(svg, data, clickFacet): void {
     const canvas = d3.select(svg);
     const treeData = buildTree(data, svg);
 
     globalState.pipe(
-        debounce(() => interval(1000)),
+        debounce(() => interval(200)),
+        skip(1),
         map(state => state.currentFacetId),
         distinctUntilChanged()
     ).subscribe(currentFacetId => {
@@ -20,10 +21,12 @@ function drawTree(svg, data, clickFacet): void {
     });
 
     globalState.pipe(
-        debounce(() => interval(1000)),
+        debounce(() => interval(200)),
+        skip(1),
         map(state => state.expandedFacetId),
         filter(expandedFacetId => {
             const [prev, curr] = expandedFacetId.split(',');
+            console.log(expandedFacetId);
             return prev !== curr;
         }),
         distinctUntilChanged()
@@ -36,7 +39,7 @@ function drawTree(svg, data, clickFacet): void {
                 expandedNodes[0].parentNode.removeChild(expandedNodes[0]);
             }
             // draw pie chart
-            drawFacetPieChart(treeData.facetChart.filter(x => x.facetId.toString() === prev)[0], svg, treeData, clickFacet);
+            drawFacetPieChart(treeData.facetChart.filter(x => x.facetId.toString() === prev)[0], svg);
         }
         if (curr !== '-2') {
             // delete pie chart
@@ -45,7 +48,7 @@ function drawTree(svg, data, clickFacet): void {
                 expandedNodes[0].parentNode.removeChild(expandedNodes[0]);
             }
             // draw force layout
-            drawFacetForceLayout(treeData.facetChart.filter(x => x.facetId.toString() === curr)[0], svg, clickFacet);
+            drawFacetForceLayout(treeData.facetChart.filter(x => x.facetId.toString() === curr)[0], svg);
         }
     });
 
@@ -86,11 +89,19 @@ function drawTree(svg, data, clickFacet): void {
         })
         .attr('fill', d => d.color)
         .style('cursor', 'pointer')
-        .on('click', (d, i) => clickFacet(treeData.branches[i].facetId, treeData.branches[i].facetName));
+        .on('click', (d, i) => {
+            const [prev, curr] = globalState.getValue().expandedFacetId.split(',');
+            globalState.next(
+                {
+                    currentFacetId: treeData.branches[i].facetId,
+                    expandedFacetId: curr + ',-2',
+                }
+            )
+        });
     // draw second  layer facet
     treeData.facetChart.forEach(element => {
         // 饼图
-        drawFacetPieChart(element, svg, treeData, clickFacet);
+        drawFacetPieChart(element, svg);
         // 力导向图
         // drawFacetForceLayout(element, svg);
     });

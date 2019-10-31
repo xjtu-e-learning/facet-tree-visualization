@@ -34,7 +34,8 @@
     "test": "jest",
     "build": "rm -rf ./dst && tsc",
     "webpack": "webpack",
-    "dev": "rm -rf dist && npm run webpack -- --mode development",
-    "prod": "rm -rf dist && npm run webpack -- --mode production"
+    "dev": "rm -rf dist module && npm run webpack -- --mode development --config ./config/webpack.config.dev.js && npm run webpack -- --mode development",
+    "prod": "rm -rf dist module && npm run webpack -- --mode production --config ./config/webpack.config.dev.js && npm run webpack -- --mode production",
+    "pack": "rm -rf module && npm run webpack -- --mode production --config ./config/webpack.config.dev.js"
   }
 }
