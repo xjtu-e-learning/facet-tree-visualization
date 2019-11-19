@@ -1,5 +1,7 @@
-# 二维分面树可视化
-[Demo](http://yotta.xjtushilei.com:888/facet-tree/)
+# Facet Tree Visualization
 
-![snapshot1](./snapshot1.png)
-![snapshot2](./snapshot2.png)
+## Usage
+1. Download `facetTree.js` from `release` tab
+2. import `drawTree` (refer to `index.ts`)
+3. define your own click func ( like `clickFacet` in `index.ts` )
+4. transfer `dom, treeData, clickFunc` to `drawTree`
