@@ -21,10 +21,16 @@ export function drawFacetPieChart(data: FacetChartData, dom: HTMLElement, fontSi
         .style('cursor', 'pointer')
         .on('click', d => {
             const [prev, curr] = globalState.getValue().expandedFacetId.split(',');
-            globalState.next({
-                currentFacetId: (d.data as any).facetId,
-                expandedFacetId: curr + ',' + data.facetId.toString(),
-            });
+            globalState.next(
+                Object.assign(
+                    {},
+                    globalState.getValue(),
+                    {
+                        currentFacetId: (d.data as any).facetId,
+                        expandedFacetId: curr + ',' + data.facetId.toString(),
+                    }
+                )
+            )
         });
     const num = data.childrenNumber;
     const angle = Math.PI / num;

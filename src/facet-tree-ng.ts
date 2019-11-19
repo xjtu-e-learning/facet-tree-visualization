@@ -306,19 +306,19 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         tempIndex--;
     }
     if (odd) {
-        result.leaves.unshift();
+        result.leaves.shift();
     }
     for (let i = 0; i < firstLayerTmpNumber; i++) {
         result.leaves[i].color = palettes[i][ColorNo];
     }
 
     // 一级分面宽度
-    const facetWidth = (Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx) - 4 * r) / (1.4 * firstLayerTmpNumber - 0.4);
+    const facetWidth = (Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx) - r) / (1.4 * firstLayerTmpNumber - 0.4);
     const facetInterval = facetWidth * 0.4;
     // 最左横坐标
     const xInit = (result.leaves[firstLayerTmpNumber - 1].cx < result.leaves[firstLayerTmpNumber - 2].cx
-        ? result.leaves[firstLayerTmpNumber - 1].cx + r * 2
-        : result.leaves[firstLayerTmpNumber - 2].cx + r * 2);
+        ? result.leaves[firstLayerTmpNumber - 1].cx + r / 2
+        : result.leaves[firstLayerTmpNumber - 2].cx + r / 2);
 
     // 初始化一级分面对应的branch
     firstLayerTmp.forEach((facet, index) => {
@@ -343,7 +343,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     }
 
     for (let i = 0; i < firstLayerTmpNumber; i++) {
-        const space = 2 * r + r * (firstLayerTmpNumber - i) / 4;
+        const space = r + r * (firstLayerTmpNumber - i) / 4;
         if (result.branches[i].x <= width / 2) {
             if (Math.abs(result.leaves[i].cx - result.branches[i].x) > space) {
                 result.branches[i].y = result.leaves[i].cy + space;
@@ -371,7 +371,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             x: result.branches[i].x < width / 2 ? result.branches[i].x + result.branches[i].width : result.branches[i].x - result.branches[i].width,
             y: result.branches[i].y,
             width: result.branches[i].width,
-            height: r + tempIndex * deltaInterval / 5,
+            height: r / 4 + tempIndex * deltaInterval / 5,
             transform: '',
             color: palettes[i][ColorNo],
         }
@@ -411,6 +411,14 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             text: result.branches[i].facetName,
             fontSize
         });
+    }
+
+    for (const leaf of result.leaves) {
+        leaf.r = facetWidth * 0.6;
+    }
+
+    for (const pie of result.facetChart) {
+        pie.r = facetWidth * 0.8;
     }
 
     return result;

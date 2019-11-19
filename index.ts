@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import {drawTree} from './module/facetTree';
-import { data } from './data';
+import {drawTree} from './src';
+// import { data } from './data';
 
 const svg = document.getElementById('mysvg');
 
@@ -66,4 +66,22 @@ async function clickFacet(facetId: number) {
 
 }
 
-drawTree(svg, data, clickFacet);
+axios.get('http://yotta.xjtushilei.com:8083/topic/getTopicsByDomainName?domainName=数据结构')
+    .then(res => {
+        const topics = res.data.data;
+        for (const topic of topics) {
+            const topicButton = document.createElement('button');
+            topicButton.innerHTML = topic.topicName;
+            topicButton.onclick = () => {
+                axios.post('http://yotta.xjtushilei.com:8083/topic/getCompleteTopicByTopicName?topicName=' + encodeURIComponent(topic.topicName) + '&hasFragment=emptyAssembleContent').then(res => {
+                    console.log(res.data.data)
+                    drawTree(svg, res.data.data, clickFacet);
+                }).catch(err => console.log(err))
+            }
+            document.getElementById('topic-list').appendChild(topicButton);
+        }
+    })
+    .catch(err => console.log(err));
+
+
+

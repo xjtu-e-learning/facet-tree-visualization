@@ -58,15 +58,21 @@ export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, fon
         .data(nodes)
         .enter()
         .append('circle')
-        .attr('r', data.r / 2)
+        .attr('r', data.r / 3)
         .attr('fill', data.color)
         .style('cursor', 'pointer')
         .on('click', d => {
             const [prev, next] = globalState.getValue().expandedFacetId.split(',');
-            globalState.next({
-                currentFacetId: d.facetId,
-                expandedFacetId: next + ',' + data.facetId.toString(),
-            });
+            globalState.next(
+                Object.assign(
+                    {},
+                    globalState.getValue(),
+                    {
+                        currentFacetId: d.facetId,
+                        expandedFacetId: next + ',' + data.facetId.toString(),
+                    }
+                )
+            )
         });
 
     const label = container.append('g')
@@ -118,7 +124,7 @@ export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, fon
         .force("center", d3.forceCenter(data.cx, data.cy))
         .force("x", d3.forceX(data.cx).strength(1))
         .force("y", d3.forceY(data.cy).strength(1))
-        .force("link", (d3.forceLink(links) as any).id(d => d.id).distance(5).strength(0.5))
+        .force("link", (d3.forceLink(links) as any).id(d => d.id).distance(3 * data.r).strength(0.1))
         .on("tick", ticked);
 
     function dragstarted(d): void {
