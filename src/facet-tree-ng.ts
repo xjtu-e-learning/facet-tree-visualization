@@ -170,10 +170,10 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
      */
     if (firstLayerNumber === 1) {
         result.branches.push({
-            x: width / 2 - 8,
-            y: height * 0.618,
-            width: 16,
-            height: height * 0.382,
+            x: width / 2 - 16,
+            y: height * 0.5,
+            width: 32,
+            height: height * 0.5 - 40,
             color: palettes[0][ColorNo],
             facetId: data.children[0].facetId,
             facetName: data.children[0].facetName,
@@ -181,7 +181,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         result.leaves.push({
             cx: width / 2,
             cy: height * 0.382,
-            r: 12,
+            r: 20,
             color: palettes[0][ColorNo],
         });
         result.foldBranches.push({
@@ -203,6 +203,14 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
                     result.leaves[0].r)
             );
         }
+
+        result.texts.push({
+            x: result.branches[0].x + 32 / 2 - 30 / 2,
+            y: result.branches[0].y + 8,
+            text: result.branches[0].facetName,
+            fontSize: 30
+        });
+
         return result;
     }
 
