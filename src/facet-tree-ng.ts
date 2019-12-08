@@ -215,7 +215,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     }
 
     // 判断是否视窗过小，需要折叠分面
-    const foldFlag = 0.8 * width < (14 * firstLayerNumber - 4) ? true : false;
+    const foldFlag = 0.6 * width < (14 * firstLayerNumber - 4) ? true : false;
 
     // 计算分面权重
     const firstLayerMap = [];
@@ -321,13 +321,17 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     }
 
     // 一级分面宽度
-    const facetWidth = (Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx) - r) / (1.4 * firstLayerTmpNumber - 0.4);
+    const widthBetweenSide = Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx);
+    const xInitFlag = (widthBetweenSide - r) < (width * 0.6) ? true : false;
+    const facetWidth = xInitFlag ? (Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx) - r) / (1.4 * firstLayerTmpNumber - 0.4) : (width * 0.6) / (1.4 * firstLayerTmpNumber - 0.4);
     const facetInterval = facetWidth * 0.4;
     // 最左横坐标
-    const xInit = (result.leaves[firstLayerTmpNumber - 1].cx < result.leaves[firstLayerTmpNumber - 2].cx
+    let xInit = (result.leaves[firstLayerTmpNumber - 1].cx < result.leaves[firstLayerTmpNumber - 2].cx
         ? result.leaves[firstLayerTmpNumber - 1].cx + r / 2
         : result.leaves[firstLayerTmpNumber - 2].cx + r / 2);
-
+    if (!xInitFlag) {
+        xInit = width * 0.2;
+    }
     // 初始化一级分面对应的branch
     firstLayerTmp.forEach((facet, index) => {
         const branch: Branch = {
