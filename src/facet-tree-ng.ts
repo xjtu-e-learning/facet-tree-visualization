@@ -146,6 +146,10 @@ function calcFacetChart(data: FacetData, cx: number, cy: number, color: string, 
 }
 
 export function buildTree(data: TreeData, dom: HTMLElement): Tree {
+    const branchRate = 0.4;
+    const branchIntervalRate = 0.2;
+    const branchWidthRate = 0.5;
+
     const result: Tree = {
         branches: [],
         leaves: [],
@@ -171,9 +175,9 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     if (firstLayerNumber === 1) {
         result.branches.push({
             x: width / 2 - 16,
-            y: height * 0.5,
+            y: height * branchRate,
             width: 32,
-            height: height * 0.5 - 40,
+            height: height * branchRate - 40,
             color: palettes[0][ColorNo],
             facetId: data.children[0].facetId,
             facetName: data.children[0].facetName,
@@ -215,7 +219,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     }
 
     // 判断是否视窗过小，需要折叠分面
-    const foldFlag = 0.6 * width < (14 * firstLayerNumber - 4) ? true : false;
+    const foldFlag = branchWidthRate * width < (14 * firstLayerNumber - 4) ? true : false;
 
     // 计算分面权重
     const firstLayerMap = [];
@@ -238,7 +242,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     // 如果需要折叠
     if (foldFlag) {
         // 可容纳最多一级分面数
-        const maxFirstLayerNumber = Math.floor((width * 0.6 + 4) / 14);
+        const maxFirstLayerNumber = Math.floor((width * branchWidthRate + 4) / 14);
         // 权重大于100的分面（约为有二级分面的一级分面）
         const firstLayerNumberWithSecondLayer = firstLayerMap.filter(x => x.value > 100).length;
         // 剩余可折叠分面
@@ -278,7 +282,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         }
     }
 
-    if (dragflag) width = (14 * firstLayerNumber - 4) / 0.6;
+    if (dragflag) width = ((1 + branchIntervalRate) * firstLayerNumber - branchIntervalRate) * 10 / branchWidthRate;
 
     // sort fold facets
     firstLayerTmp.sort((a, b) => calcWeight(b) - calcWeight(a));
@@ -287,7 +291,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
 
     const firstLayerTmpNumber = firstLayerTmp.length;
     const odd = firstLayerTmpNumber % 2 === 1 ? true : false;
-    const topHeight = height * 0.618;
+    const topHeight = height * (1 - branchRate);
     // calc leaves position
     const angle = Math.PI / (firstLayerTmpNumber * 2);
     const r1 = width * Math.tan(angle) / (2 * (1 + Math.tan(angle)));
@@ -322,20 +326,20 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
 
     // 一级分面宽度
     const widthBetweenSide = Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx);
-    const xInitFlag = (widthBetweenSide - r) < (width * 0.6) ? true : false;
-    const facetWidth = xInitFlag ? (Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx) - r) / (1.4 * firstLayerTmpNumber - 0.4) : (width * 0.6) / (1.4 * firstLayerTmpNumber - 0.4);
-    const facetInterval = facetWidth * 0.4;
+    const xInitFlag = (widthBetweenSide - r) < (width * branchWidthRate) ? true : false;
+    const facetWidth = xInitFlag ? (Math.abs(result.leaves[firstLayerTmpNumber - 1].cx - result.leaves[firstLayerTmpNumber - 2].cx) - r) / ((1 + branchIntervalRate) * firstLayerTmpNumber - branchIntervalRate) : (width * branchWidthRate) / ((1 + branchIntervalRate) * firstLayerTmpNumber - branchIntervalRate);
+    const facetInterval = facetWidth * branchIntervalRate;
     // 最左横坐标
     let xInit = (result.leaves[firstLayerTmpNumber - 1].cx < result.leaves[firstLayerTmpNumber - 2].cx
         ? result.leaves[firstLayerTmpNumber - 1].cx + r / 2
         : result.leaves[firstLayerTmpNumber - 2].cx + r / 2);
     if (!xInitFlag) {
-        xInit = width * 0.2;
+        xInit = width * (1 - branchWidthRate) / 2;
     }
     // 初始化一级分面对应的branch
     firstLayerTmp.forEach((facet, index) => {
         const branch: Branch = {
-            x: xInit + index * 1.4 * facetWidth,
+            x: xInit + index * (1 + branchIntervalRate) * facetWidth,
             y: 0,
             width: facetWidth,
             height: 0,
@@ -355,21 +359,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     }
 
     for (let i = 0; i < firstLayerTmpNumber; i++) {
-        const space = r + r * (firstLayerTmpNumber - i) / 4;
-        if (result.branches[i].x <= width / 2) {
-            if (Math.abs(result.leaves[i].cx - result.branches[i].x) > space) {
-                result.branches[i].y = result.leaves[i].cy + space;
-            } else {
-                result.branches[i].y = result.leaves[i].cy + Math.sqrt(Math.pow(space, 2) - Math.pow(result.leaves[i].cx - result.branches[i].x, 2));
-            }
-        } else {
-            if (Math.abs(result.leaves[i].cx - result.branches[i].x - result.branches[i].width) > space) {
-                result.branches[i].y = result.leaves[i].cy + space;
-            } else {
-                result.branches[i].y = result.leaves[i].cy + Math.sqrt(Math.pow(space, 2) - Math.pow(result.leaves[i].cx - result.branches[i].x - result.branches[i].width, 2));
-            }
-        }
-
+        result.branches[i].y = result.leaves[i].cy / 2 + height * (1 - branchRate * 0.8) / 2;
         result.branches[i].height = height - result.branches[i].y - 40;
         result.branches[i].color = palettes[i][ColorNo];
     }
@@ -383,7 +373,8 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             x: result.branches[i].x < width / 2 ? result.branches[i].x + result.branches[i].width : result.branches[i].x - result.branches[i].width,
             y: result.branches[i].y,
             width: result.branches[i].width,
-            height: r / 4 + tempIndex * deltaInterval / 5,
+            height: result.branches[i].x > width / 2 ? Math.sqrt(Math.pow(result.leaves[i].cx - result.branches[i].x + facetWidth / 2,2) + Math.pow(result.leaves[i].cy - result.branches[i].y, 2)) / 2
+             : Math.sqrt(Math.pow(result.leaves[i].cx - result.branches[i].x - facetWidth, 2) + Math.pow(result.leaves[i].cy - result.branches[i].y, 2)) / 2,
             transform: '',
             color: palettes[i][ColorNo],
         }
