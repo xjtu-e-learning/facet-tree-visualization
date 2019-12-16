@@ -13,7 +13,18 @@ export function drawTree(svg, data, clickFacet): void {
     emptyChildren(svg);
     const canvas = d3.select(svg);
     const treeData = buildTree(data, svg);
-    
+
+    if (!document.getElementById('facet-tree-tooltip')) {
+        d3.select('body').append('div')
+            .attr('id', 'facet-tree-tooltip')
+            .style('position', 'absolute')
+            .style('opacity', 0)
+            .style('text-align', 'center')
+            .style('font-size', '6px')
+            .style('background-color', '#ffffb8')
+            .style('padding', '1px 3px');
+    }
+
     // fix closure
     globalData.treeData = treeData;
 
@@ -29,7 +40,7 @@ export function drawTree(svg, data, clickFacet): void {
             expandedFacetId: '-2,-2',
             init: true
         });
-        
+
         globalState.pipe(
             debounce(() => interval(200)),
             filter(state => !isEqual(state, {
@@ -42,7 +53,7 @@ export function drawTree(svg, data, clickFacet): void {
         ).subscribe(currentFacetId => {
             clickFacet(currentFacetId);
         });
-    
+
         globalState.pipe(
             debounce(() => interval(200)),
             filter(state => !isEqual(state, {

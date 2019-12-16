@@ -80,7 +80,7 @@ export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, fon
         .data(nodes)
         .enter()
         .append('text')
-        .attr('fill', '#000')
+        .attr('fill', '#aaaaaa')
         .attr('font-size', fontSize + 'px')
         .text(d => d.facetName);
 
@@ -120,11 +120,11 @@ export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, fon
     }
 
     const graphLayout = d3.forceSimulation(nodes)
-        .force("charge", d3.forceManyBody().strength(-1000))
+        .force("charge", d3.forceManyBody().strength(-500))
         .force("center", d3.forceCenter(data.cx, data.cy))
         .force("x", d3.forceX(data.cx).strength(1))
         .force("y", d3.forceY(data.cy).strength(1))
-        .force("link", (d3.forceLink(links) as any).id(d => d.id).distance(3 * data.r).strength(0.1))
+        .force("link", (d3.forceLink(links) as any).id(d => d.id).distance(2 * data.r))
         .on("tick", ticked);
 
     function dragstarted(d): void {
