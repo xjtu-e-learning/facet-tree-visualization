@@ -82,6 +82,3 @@ axios.get('http://yotta.xjtushilei.com:8083/topic/getTopicsByDomainName?domainNa
         }
     })
     .catch(err => console.log(err));
-
-
-

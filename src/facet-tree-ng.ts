@@ -6,9 +6,27 @@ const palettes = [];
 for (const key in presetPalettes) {
     palettes.push(presetPalettes[key]);
 }
-
+// variables
+// 调色板色号
 const ColorNo = 7;
+// 分面字体大小范围
+const minFacetFontSize = 8;
+const maxFacetFontSize = 20;
+// 内容丰富度权重
+const weightSecondFacet = 2000;
+const weightFirstLayerVideo = 100;
+const weightFirstLayerRichText = 1;
+const weightSecondLayerVideo = 100;
+const weightSecondLayerRichText = 1;
+// 最矮树干占绘制区域比例
+const branchRate = 0.4;
+// 一级分面间距占分面宽度比例
+const branchIntervalRate = 0.2;
+// 树干总宽度占绘制区域比例
+const branchWidthRate = 0.5;
 
+const firstLayerThreshold = 6;
+const secondLayerThreshold = 5;
 /**
  * input: [a, b, c, d, e]
  * output: [c, b, d, e, a]
@@ -62,22 +80,36 @@ interface TreeData {
  * @param facetData 分面数据 
  */
 function calcWeight(facetData: FacetData): number {
-    if (facetData.facetId === -1) return 0;
-    if (facetData.containChildrenFacet) {
-        return 100 * facetData.childrenNumber + facetData.children.reduce((acc: number, curr: FacetData) => acc + calcWeight(curr), 0);
-    }
-    return facetData.children.reduce((acc: number, curr: AssembleData): number => {
-        if (curr.flag === 'fragment') {
-            return acc + 1;
-        } else {
-            return acc + 10;
+    // 一级分面
+    if (facetData.facetLayer === 1) {
+        // 折叠分面，权重为0
+        if (facetData.facetId === -1) return 0;
+        // 有二级分面
+        if (facetData.containChildrenFacet) {
+            return weightSecondFacet * facetData.childrenNumber;
         }
-    }, 0);
-}
+        // 没有二级分面
+        return facetData.children.reduce((acc: number, curr: AssembleData): number => {
+            if (curr.flag === 'fragment') {
+                return acc + weightFirstLayerRichText;
+            } else {
+                return acc + weightFirstLayerVideo;
+            }
+        }, 0);
+    } else {
+        if (facetData.containChildrenFacet) {
+            return weightSecondFacet * facetData.childrenNumber;
+        }
+        return facetData.children.reduce((acc: number, curr: AssembleData): number => {
+            if (curr.flag === 'fragment') {
+                return acc + weightSecondLayerRichText;
+            } else {
+                return acc + weightSecondLayerVideo;
+            }
+        }, 0);
+    }
 
-// 分面字体大小范围
-const minFacetFontSize = 8;
-const maxFacetFontSize = 20;
+}
 
 interface Branch {
     x: number;
@@ -146,9 +178,6 @@ function calcFacetChart(data: FacetData, cx: number, cy: number, color: string, 
 }
 
 export function buildTree(data: TreeData, dom: HTMLElement): Tree {
-    const branchRate = 0.4;
-    const branchIntervalRate = 0.2;
-    const branchWidthRate = 0.5;
 
     const result: Tree = {
         branches: [],
@@ -218,8 +247,10 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         return result;
     }
 
-    // 判断是否视窗过小，需要折叠分面
-    const foldFlag = branchWidthRate * width < (14 * firstLayerNumber - 4) ? true : false;
+    // 判断是否视窗过小，需要折叠分面（弃用）
+    // const foldFlag = branchWidthRate * width < (14 * firstLayerNumber - 4) ? true : false;
+    // 
+    const foldFlag = firstLayerNumber > firstLayerThreshold ? true : false;
 
     // 计算分面权重
     const firstLayerMap = [];
@@ -234,17 +265,15 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     // 根据权重排序
     firstLayerMap.sort((a, b) => a.value - b.value);
 
-    // 视窗实在太小需要支持拖动
-    let dragflag = false;
-
     let firstLayerTmp = data.children;
 
     // 如果需要折叠
     if (foldFlag) {
         // 可容纳最多一级分面数
-        const maxFirstLayerNumber = Math.floor((width * branchWidthRate + 4) / 14);
-        // 权重大于100的分面（约为有二级分面的一级分面）
-        const firstLayerNumberWithSecondLayer = firstLayerMap.filter(x => x.value > 100).length;
+        // const maxFirstLayerNumber = Math.floor((width * branchWidthRate + 4) / 14);
+        const maxFirstLayerNumber = firstLayerThreshold;
+        // 权重大于weightSecondFacet的分面（约为有二级分面的一级分面）
+        const firstLayerNumberWithSecondLayer = firstLayerMap.filter(x => x.value > weightSecondFacet - 1).length;
         // 剩余可折叠分面
         const firstLayerNumberWithoutSecondLayer = firstLayerNumber - firstLayerNumberWithSecondLayer;
 
@@ -253,7 +282,6 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
 
         if (maxFirstLayerNumber < firstLayerNumberWithSecondLayer + 1) {
             // 最多可容纳一级分面 < 有二级分面的一级分面数，只将可折叠的一级分面全部折叠
-            dragflag = true;
             foldFacetIds.concat(firstLayerMap.filter(x => x.value < 100).map(x => x.facetId));
         } else {
             // 否则折叠部分
@@ -282,15 +310,15 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         }
     }
 
-    if (dragflag) width = ((1 + branchIntervalRate) * firstLayerNumber - branchIntervalRate) * 10 / branchWidthRate;
-
     // sort fold facets
     firstLayerTmp.sort((a, b) => calcWeight(b) - calcWeight(a));
 
     result.treeData = firstLayerTmp;
 
     const firstLayerTmpNumber = firstLayerTmp.length;
+    // 分面数奇偶性
     const odd = firstLayerTmpNumber % 2 === 1 ? true : false;
+    // 叶子分布的高度
     const topHeight = height * (1 - branchRate);
     // calc leaves position
     const angle = Math.PI / (firstLayerTmpNumber * 2);
@@ -373,8 +401,8 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             x: result.branches[i].x < width / 2 ? result.branches[i].x + result.branches[i].width : result.branches[i].x - result.branches[i].width,
             y: result.branches[i].y,
             width: result.branches[i].width,
-            height: result.branches[i].x > width / 2 ? Math.sqrt(Math.pow(result.leaves[i].cx - result.branches[i].x + facetWidth / 2,2) + Math.pow(result.leaves[i].cy - result.branches[i].y, 2)) / 2
-             : Math.sqrt(Math.pow(result.leaves[i].cx - result.branches[i].x - facetWidth, 2) + Math.pow(result.leaves[i].cy - result.branches[i].y, 2)) / 2,
+            height: result.branches[i].x > width / 2 ? Math.sqrt(Math.pow(result.leaves[i].cx - result.branches[i].x + facetWidth / 2, 2) + Math.pow(result.leaves[i].cy - result.branches[i].y, 2)) / 2
+                : Math.sqrt(Math.pow(result.leaves[i].cx - result.branches[i].x - facetWidth, 2) + Math.pow(result.leaves[i].cy - result.branches[i].y, 2)) / 2,
             transform: '',
             color: palettes[i][ColorNo],
         }
