@@ -24,6 +24,7 @@
     "@typescript-eslint/parser": "^2.3.1",
     "eslint": "^6.4.0",
     "jest": "^24.9.0",
+    "rimraf": "^3.0.2",
     "ts-jest": "^24.1.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.6.3",
@@ -32,10 +33,10 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "rm -rf ./dst && tsc",
+    "build": "rimraf ./dst && tsc",
     "webpack": "webpack",
-    "dev": "rm -rf dist module && npm run webpack -- --mode development --config ./config/webpack.config.dev.js && npm run webpack -- --mode development",
-    "prod": "rm -rf dist module && npm run webpack -- --mode production --config ./config/webpack.config.dev.js && npm run webpack -- --mode production",
-    "pack": "rm -rf module && npm run webpack -- --mode production --config ./config/webpack.config.dev.js"
+    "dev": "npm run webpack -- --mode development",
+    "prod": "npm run webpack -- --mode production",
+    "pack": "rimraf module && npm run webpack -- --mode production --config ./config/webpack.config.dev.js"
   }
 }
