@@ -49,6 +49,7 @@ interface AssembleData {
     type: string;
     flag: string;
     url: string;
+    assembleType: 'text' | 'video';
 }
 
 export interface FacetData {
@@ -90,7 +91,7 @@ function calcWeight(facetData: FacetData): number {
         }
         // 没有二级分面
         return facetData.children.reduce((acc: number, curr: AssembleData): number => {
-            if (curr.flag === 'fragment') {
+            if (curr.assembleType === 'text') {
                 return acc + weightFirstLayerRichText;
             } else {
                 return acc + weightFirstLayerVideo;
