@@ -25,7 +25,7 @@ const branchIntervalRate = 0.2;
 // 树干总宽度占绘制区域比例
 const branchWidthRate = 0.5;
 
-const firstLayerThreshold = 6;
+const firstLayerThreshold = 7;
 const secondLayerThreshold = 5;
 /**
  * input: [a, b, c, d, e]
@@ -81,10 +81,10 @@ interface TreeData {
  * @param facetData 分面数据 
  */
 function calcWeight(facetData: FacetData): number {
+    // 折叠分面，权重为0
+    if (facetData.facetId === -1) return 0;
     // 一级分面
     if (facetData.facetLayer === 1) {
-        // 折叠分面，权重为0
-        if (facetData.facetId === -1) return 0;
         // 有二级分面
         if (facetData.containChildrenFacet) {
             return weightSecondFacet * facetData.childrenNumber;
@@ -279,22 +279,21 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         const firstLayerNumberWithoutSecondLayer = firstLayerNumber - firstLayerNumberWithSecondLayer;
 
         // 用来存放要折叠的一级分面facetId
-        const foldFacetIds = [];
+        let foldFacetIds = [];
 
         if (maxFirstLayerNumber < firstLayerNumberWithSecondLayer + 1) {
             // 最多可容纳一级分面 < 有二级分面的一级分面数，只将可折叠的一级分面全部折叠
-            foldFacetIds.concat(firstLayerMap.filter(x => x.value < 100).map(x => x.facetId));
+            foldFacetIds.concat(firstLayerMap.filter(x => x.value < weightSecondFacet).map(x => x.facetId));
         } else {
             // 否则折叠部分
-            foldFacetIds.concat(
+            foldFacetIds = foldFacetIds.concat(
                 firstLayerMap.slice(maxFirstLayerNumber - 1 > 0 ? maxFirstLayerNumber - 1 : 0)
                     .map(x => x.facetId)
             );
         }
-
         if (foldFacetIds.length) {
-            const tmp: FacetData[] = [];
-            tmp.concat(firstLayerTmp.filter(x => foldFacetIds.indexOf(x.facetId) === -1));
+            let tmp: FacetData[] = [];
+            tmp = tmp.concat(firstLayerTmp.filter(x => foldFacetIds.indexOf(x.facetId) === -1));
             const facetTmp: FacetData = {
                 facetId: -1,
                 facetName: '其他分面',
@@ -397,7 +396,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
      * 生成foldBranches
      */
     tempIndex = firstLayerTmpNumber + 1;
-    for (let i = 0; i < firstLayerNumber; i++) {
+    for (let i = 0; i < firstLayerTmpNumber; i++) {
         const foldBranch: FoldBranch = {
             x: result.branches[i].x < width / 2 ? result.branches[i].x + result.branches[i].width : result.branches[i].x - result.branches[i].width,
             y: result.branches[i].y,
