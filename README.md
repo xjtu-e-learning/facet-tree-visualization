@@ -1,5 +1,8 @@
 # Facet Tree Visualization
 
+## Build
+`npm run pack` 打包结果在 `/module/facetTree.js`
+
 ## Usage
 1. download `facetTree.js` from `release` tab
 2. import `drawTree` (refer to `index.ts`)
