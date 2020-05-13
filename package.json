@@ -35,8 +35,8 @@
     "test": "jest",
     "build": "rimraf ./dst && tsc",
     "webpack": "webpack",
-    "dev": "npm run webpack -- --mode development",
-    "prod": "npm run webpack -- --mode production",
+    "dev": "npm run webpack -- --mode development --config ./config/webpack.config.js",
+    "prod": "npm run webpack -- --mode production --config ./config/webpack.config.js",
     "pack": "rimraf module && npm run webpack -- --mode production --config ./config/webpack.config.dev.js"
   }
 }
