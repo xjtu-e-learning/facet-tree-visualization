@@ -1,5 +1,7 @@
 # Facet Tree Visualization
 
+## Demo
+!(https://github.com/xjtu-e-learning/facet-tree-visualization/blob/ts-refactor/facetTree.png?raw=true)
 ## Build
 `npm run pack` 打包结果在 `/module/facetTree.js`
 
