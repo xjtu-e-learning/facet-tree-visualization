@@ -1,7 +1,10 @@
 # Facet Tree Visualization
 
-## Demo
+## Input and output
+- Input: Hierarchical data of a topic
 !(https://github.com/xjtu-e-learning/facet-tree-visualization/blob/ts-refactor/facetTree.png?raw=true)
+- Output: Data is visualized as a faceted tree
+
 ## Build
 `npm run pack` 打包结果在 `/module/facetTree.js`
 
@@ -34,7 +37,7 @@
 
 - 函数
 
-1. `camelSort` 
+1. `camelSort`
 2. `calcWeight` 计算分面权重
 3. `calcFacetChart`
 4. `buildTree`
@@ -50,4 +53,3 @@
 ### src/state.ts
 
 ### src/tools/utils.ts
-
