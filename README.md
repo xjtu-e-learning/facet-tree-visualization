@@ -2,8 +2,9 @@
 
 ## Input and output
 - Input: Hierarchical data of a topic
-!(https://github.com/xjtu-e-learning/facet-tree-visualization/blob/ts-refactor/facetTree.png?raw=true)
+![avatar](photos/inputData.png)
 - Output: Data is visualized as a faceted tree
+![avatar](photos/facetTree.jpg)
 
 ## Build
 `npm run pack` 打包结果在 `/module/facetTree.js`
