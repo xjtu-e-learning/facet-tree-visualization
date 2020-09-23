@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { map, distinctUntilChanged, debounce, filter, skip } from 'rxjs/operators';
 import { interval } from 'rxjs';
-import { isEqual } from 'lodash';
+import { isEqual, range } from 'lodash';
 
 import { buildTree } from './facet-tree-ng';
 import { drawFacetPieChart } from './facet-pie-chart';
@@ -49,7 +49,7 @@ export function drawTree(svg, data, clickFacet): void {
                 init: true,
             })),
             map(state => state.currentFacetId),
-            distinctUntilChanged()
+            // distinctUntilChanged()
         ).subscribe(currentFacetId => {
             clickFacet(currentFacetId);
         });
@@ -67,7 +67,7 @@ export function drawTree(svg, data, clickFacet): void {
                 console.log(expandedFacetId);
                 return prev !== curr;
             }),
-            distinctUntilChanged()
+            // distinctUntilChanged()
         ).subscribe(expandedFacetId => {
             const [prev, curr] = expandedFacetId.split(',');
             if (prev !== '-2' && globalData.treeData.facetChart.filter(x => x.facetId.toString() === prev)[0]) {
@@ -81,9 +81,16 @@ export function drawTree(svg, data, clickFacet): void {
             }
             if (curr !== '-2' && globalData.treeData.facetChart.filter(x => x.facetId.toString() === curr)[0]) {
                 // delete pie chart
-                const expandedNodes = document.getElementsByClassName(curr);
+                console.log("curr",curr)
+                var curr1 = 'arc'+curr
+                console.log("curr1",curr1)
+                const expandedNodes = document.getElementsByClassName(curr1);
                 while (expandedNodes.length) {
                     expandedNodes[0].parentNode.removeChild(expandedNodes[0]);
+                }
+                const expandedNodes1 = document.getElementsByClassName(curr);
+                while (expandedNodes1.length) {
+                    expandedNodes1[0].parentNode.removeChild(expandedNodes1[0]);
                 }
                 // draw force layout
                 drawFacetForceLayout(globalData.treeData.facetChart.filter(x => x.facetId.toString() === curr)[0], svg);
@@ -140,10 +147,38 @@ export function drawTree(svg, data, clickFacet): void {
                 )
             )
         });
+    // draw assemble number
+    canvas.append('g')
+          .selectAll('text')
+          .data(treeData.texts_leaf)
+          .enter()
+          .append('text')
+          .attr('font-size',d => d.fontSize + 'px')
+          .attr('x', d => d.x)
+          .attr('y', d => d.y)
+          .text(d => d.text)
+          .attr('fill','#fff').style('cursor', 'pointer')
+          .on('click', (d, i) => {
+              const [prev, curr] = globalState.getValue().expandedFacetId.split(',');
+              globalState.next(
+                  Object.assign(
+                      {},
+                      globalState.getValue(),
+                      {
+                          currentFacetId: treeData.branches[i].facetId,
+                          expandedFacetId: curr + ',-2',
+                      }
+                  )
+              )
+          });
+    
     // draw second  layer facet
     treeData.facetChart.forEach(element => {
         // 饼图
+        
+       
         drawFacetPieChart(element, svg);
+        
         // 力导向图
         // drawFacetForceLayout(element, svg);
     });
@@ -170,9 +205,20 @@ export function drawTree(svg, data, clickFacet): void {
     // draw topic name
     canvas.append('g')
         .append('text')
-        .attr('x', svg.clientWidth / 2 - 24 * data.topicName.length / 2)
+        .attr('x', svg.clientWidth / 2 - 24 * judgementStringLengthWithChinese(data.topicName) / 2)
         .attr('y', svg.clientHeight - 10)
         .text(data.topicName)
         .attr('fill', '#000')
         .attr('font-size', '24px');
 }
+
+export function judgementStringLengthWithChinese(str: string): number {
+    let result = 0;
+    for (let i = 0; i < str.length; i++) {
+        if (/[a-z0-9\*\\\|\(\)\&\^\%\$\#\@\!\,\.\?\<\>\/]/.test(str[i])) {
+            result += 0.5;
+        } else {
+            result += 1;
+        }
+    }
+    return result;}

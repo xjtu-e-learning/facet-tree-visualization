@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 import {drawTree} from '..';
-// import { data } from './data';
 
 const svg = document.getElementById('mysvg');
 

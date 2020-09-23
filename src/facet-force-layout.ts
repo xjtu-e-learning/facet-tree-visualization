@@ -45,6 +45,7 @@ export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, fon
     const container = d3.select(dom).append('g');
     const { nodes, links } = calcFacetForceLayout(data);
 
+    // 加载连线
     const link = container.attr('class', data.facetId).append('g')
         .selectAll('line')
         .data(links)
@@ -52,7 +53,7 @@ export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, fon
         .append('line')
         .attr('stroke', '#aaa')
         .attr('stroke-width', '1px');
-
+    // 加载圆圈
     const node = container.append('g')
         .selectAll('circle')
         .data(nodes)
@@ -74,16 +75,53 @@ export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, fon
                 )
             )
         });
-
+    // 加载标签
     const label = container.append('g')
         .selectAll('text')
         .data(nodes)
         .enter()
         .append('text')
-        .attr('fill', '#aaaaaa')
-        .attr('font-size', fontSize + 'px')
-        .text(d => d.facetName);
-
+        .attr('r', data.r / 3)
+        .attr('fill', '#000')
+        .attr('font-size', 15 + 'px')
+        .text(d => d.facetName)
+        .style('cursor', 'pointer')
+        .on('click', d => {
+            const [prev, next] = globalState.getValue().expandedFacetId.split(',');
+            globalState.next(
+                Object.assign(
+                    {},
+                    globalState.getValue(),
+                    {
+                        currentFacetId: d.facetId,
+                        expandedFacetId: next + ',' + data.facetId.toString(),
+                    }
+                )
+            )
+        });
+    const label1 = container.append('g')
+        .selectAll('text')
+        .data(nodes)
+        .enter()
+        .append('text')
+        .attr('r', data.r / 3)
+        .attr('fill', '#99FF66')
+        .attr('font-size', 15 + 'px')
+        .text(d => d.childrenNumber)
+        .style('cursor', 'pointer')
+        .on('click', d => {
+            const [prev, next] = globalState.getValue().expandedFacetId.split(',');
+            globalState.next(
+                Object.assign(
+                    {},
+                    globalState.getValue(),
+                    {
+                        currentFacetId: d.facetId,
+                        expandedFacetId: next + ',' + data.facetId.toString(),
+                    }
+                )
+            )
+        });
     function updateLink(link): void {
         link.attr("x1", function (d) { return fixna(d.source.x); })
             .attr("y1", function (d) { return fixna(d.source.y); })
@@ -97,28 +135,42 @@ export function drawFacetForceLayout(data: FacetChartData, dom: HTMLElement, fon
         });
     }
 
+    function updateLabel(label):void{
+        label.attr("transform", function (d) {
+            return "translate(" + fixna(d.x-fontSize*d.facetName.length/2) + "," + fixna(d.y) + ")";
+        });
+    }
+    function updateLabel1(label):void{
+        label.attr("transform", function (d) {
+            return "translate(" + fixna(d.x) + "," + fixna(d.y) + ")";
+        });
+    }
     function ticked(): void {
         node.call(updateNode);
         link.call(updateLink);
-        label
-            .attr('x', d => {
-                if (d.x === data.cx && d.x > dom.clientWidth / 2) {
-                    return d.x + data.r / 2;
-                }
-                if (d.x <= data.cx) {
-                    return d.x - d.facetName.length * fontSize - fontSize;
-                }
-                return d.x + data.r / 2;
+        label.call(updateLabel);
+        // label1.call(updateLabel1);
+        // label
+        //     .attr('x', d => {
+        //         if (d.x === data.cx && d.x > dom.clientWidth / 2) {
+        //             return d.x + data.r / 2;
+        //         }
+        //         if (d.x <= data.cx) {
+        //             return d.x - d.facetName.length * fontSize - fontSize;
+        //         }
+        //         return d.x + data.r / 2;
                 
-            })
-            .attr('y', d => {
-                if (d.y >= data.cy) {
-                    return d.y - data.r / 2;
-                }
-                return d.y + data.r / 2;
-            });
+        //     })
+        //     .attr('y', d => {
+        //         if (d.y >= data.cy) {
+        //             return d.y - data.r / 2;
+        //         }
+        //         return d.y + data.r / 2;
+        //     });
     }
 
+    // 创建一个力模拟
+    // 应用力模拟
     const graphLayout = d3.forceSimulation(nodes)
         .force("charge", d3.forceManyBody().strength(-500))
         .force("center", d3.forceCenter(data.cx, data.cy))

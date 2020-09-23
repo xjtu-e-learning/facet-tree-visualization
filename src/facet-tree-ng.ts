@@ -120,6 +120,7 @@ interface Branch {
     color: string;
     facetId: number;
     facetName: string;
+    chilrenNumber:number;
 }
 
 interface Leaf {
@@ -152,6 +153,7 @@ export interface Tree {
     facetChart: FacetChartData[];
     treeData: FacetData[];
     texts: TextData[];
+    texts_leaf : TextData[];
 }
 
 export interface FacetChartData extends FacetData {
@@ -187,6 +189,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         treeData: [],
         facetChart: [],
         texts: [],
+        texts_leaf:[],
     }
 
     // 如果传入数据为空
@@ -211,6 +214,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             color: palettes[0][ColorNo],
             facetId: data.children[0].facetId,
             facetName: data.children[0].facetName,
+            chilrenNumber:data.children[0].childrenNumber,
         });
         result.leaves.push({
             cx: width / 2,
@@ -245,6 +249,13 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             fontSize: 30
         });
 
+        result.texts_leaf.push({
+            x: result.leaves[0].cx,
+            y: result.leaves[0].cy,
+            // text: data.children[0].childrenNumber.toString(),
+            text: result.branches[0].chilrenNumber.toString(),
+            fontSize: 18
+        })
         return result;
     }
 
@@ -321,7 +332,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     // 叶子分布的高度
     const topHeight = height * (1 - branchRate);
     // calc leaves position
-    const angle = Math.PI / (firstLayerTmpNumber * 2);
+    const angle = Math.PI / (firstLayerTmpNumber*2 );
     const r1 = width * Math.tan(angle) / (2 * (1 + Math.tan(angle)));
     const r2 = odd ? topHeight / (1 + 1 / Math.sin(angle)) : topHeight / (1 + 1 / Math.tan(angle));
     const r = r1 < r2 ? r1 : r2;
@@ -374,6 +385,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             facetId: -1,
             facetName: '',
             color: '',
+            chilrenNumber:0,
         };
         result.branches.push(branch);
     });
@@ -384,6 +396,7 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
     for (let i = 0; i < firstLayerTmpNumber; i++) {
         result.branches[i].facetName = firstLayerTmp[i].facetName;
         result.branches[i].facetId = firstLayerTmp[i].facetId;
+        result.branches[i].chilrenNumber = firstLayerTmp[i].childrenNumber;
     }
 
     for (let i = 0; i < firstLayerTmpNumber; i++) {
@@ -421,8 +434,21 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
         tempIndex--;
     }
 
-    const fontSize = facetWidth - 4 > maxFacetFontSize ? maxFacetFontSize : facetWidth - 4;
+    // const fontSize = facetWidth - 4 > maxFacetFontSize ? maxFacetFontSize : facetWidth - 4;
 
+    // for (let i = 0; i < firstLayerTmpNumber; i++) {
+    //     // 生成facetChart
+    //     if (firstLayerTmp[i].containChildrenFacet) {
+    //         result.facetChart.push(
+    //             calcFacetChart(firstLayerTmp[i],
+    //                 result.leaves[i].cx,
+    //                 result.leaves[i].cy,
+    //                 result.leaves[i].color,
+    //                 result.leaves[i].r)
+    //         );
+    //     }
+    const fontSizew = facetWidth - 10 > maxFacetFontSize ? maxFacetFontSize : facetWidth - 4;
+    
     for (let i = 0; i < firstLayerTmpNumber; i++) {
         // 生成facetChart
         if (firstLayerTmp[i].containChildrenFacet) {
@@ -431,10 +457,19 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
                     result.leaves[i].cx,
                     result.leaves[i].cy,
                     result.leaves[i].color,
-                    result.leaves[i].r)
+                    result.leaves[i].r,
+                   )
             );
         }
-
+        let fontSize = fontSizew;
+        const fontSizeh = result.branches[i].height/(result.branches[i].facetName.length+8);
+       
+        if (fontSizew > fontSizeh ){
+              fontSize = fontSizeh;
+        }
+        else{
+               fontSize = fontSizew;
+        }
         // 生成text
         result.texts.push({
             x: result.branches[i].x + facetWidth / 2 - fontSize / 2,
@@ -442,6 +477,14 @@ export function buildTree(data: TreeData, dom: HTMLElement): Tree {
             text: result.branches[i].facetName,
             fontSize
         });
+
+       
+        result.texts_leaf.push({
+            x: result.leaves[i].cx - (fontSize * data.children[i].childrenNumber.toString().length) / 3,
+            y: result.leaves[i].cy +  fontSize*0.6  ,
+            text: result.branches[i].chilrenNumber.toString(),
+            fontSize
+        })
     }
 
     for (const leaf of result.leaves) {
