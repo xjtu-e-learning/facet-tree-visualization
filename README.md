@@ -4,7 +4,7 @@
 - Input: Hierarchical data of a topic
 ![avatar](photos/inputData.png)
 - Output: Data is visualized as a faceted tree
-![avatar](photos/facetTree.jpg)
+![avatar](photos/facetTree.png)
 
 ## Build
 `npm run pack` 打包结果在 `/module/facetTree.js`
